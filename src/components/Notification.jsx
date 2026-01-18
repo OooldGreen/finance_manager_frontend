@@ -1,5 +1,3 @@
-import '../App.css'
-
 const Notification = ({ message, className }) => {
   if(message === null) {
     return null

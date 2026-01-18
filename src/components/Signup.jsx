@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import userService from '../services/users'
+import usersService from '../services/users'
 import Notification from '../components/Notification'
 
 const Signup = () => {
@@ -45,7 +45,7 @@ const Signup = () => {
 
     // axios post
     try {
-      const response = await userService.createUser(user)
+      const response = await usersService.createUser(user)
       console.log(response)
       if (response.status === 201 || response.status === 200) {
         setHint('Registration success!')
@@ -60,19 +60,97 @@ const Signup = () => {
   }
 
  return (
-    <div>
-      <Notification message={error} className='error'></Notification>
-      <Notification message={hint} className='hint'></Notification>
-      <h2>Sign up</h2>
-      <form onSubmit={handleSubmit}>
-        <p>Username: <input type="text" name="username" onChange={handleChange} required></input></p>
-        <p>Password: <input type="password" name="password" onChange={handleChange} required></input></p>
-        <p>Confirm Password: <input type="password" name="confirmPassword" onChange={handleChange} required></input></p>
-        <p>First name: <input type="text" name="firstName" onChange={handleChange}></input></p>
-        <p>Last name: <input type="text" name="lastName" onChange={handleChange}></input></p>
-        <p>Date of birth: <input type="date" name="dateOfBirth" onChange={handleChange}></input> </p>
-        <button type="submit">Sign up</button>
-      </form>
+    <div className="flex min-h-full bg-gray-100 dark:bg-neutral-800 flex-col justify-center px-6 py-12 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+        <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Sign up</h2>
+      </div>
+
+      <div className="mt-7 bg-white border border-gray-200 rounded-xl shadow-2xs dark:bg-neutral-900 dark:border-neutral-700 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="p-4 sm:p-10">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <Notification message={error} className='hidden text-xs text-red-600 mt-2'></Notification>
+            <Notification message={hint} className='hidden text-xs text-green-600 mt-2'></Notification>
+            <div>
+              <label className="block text-sm/6 font-medium text-gray-900">Username</label>
+              <div className="mt-2">
+                <input 
+                  type="text"
+                  name="username"
+                  onChange={handleChange}
+                  required
+                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"></input>
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm/6 font-medium text-gray-900">Password</label>
+              <div className="mt-2">
+                <input 
+                  type="password"
+                  name="password"
+                  onChange={handleChange}
+                  required
+                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                ></input>
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm/6 font-medium text-gray-900">Confirm Password</label>
+              <div className="mt-2">
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  onChange={handleChange}
+                  required
+                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                ></input>
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm/6 font-medium text-gray-900">First name</label>
+              <div className="mt-2">
+                <input 
+                  type="text"
+                  name="firstName"
+                  onChange={handleChange}
+                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                ></input>
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm/6 font-medium text-gray-900">Last name</label>
+              <div className="mt-2">
+                <input
+                  type="text"
+                  name="lastName"
+                  onChange={handleChange}
+                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                ></input>
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm/6 font-medium text-gray-900">Date of birth</label>
+              <div className="mt-2">
+                <input 
+                  type="date"
+                  name="dateOfBirth"
+                  onChange={handleChange}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-neutral-800 dark:border-neutral-700 dark:text-white" 
+                  placeholder="Select date"></input>
+              </div>
+            </div>
+            <div>
+              <button type="submit" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign up</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <p className="mt-10 text-center text-sm/6 text-gray-500">
+        Already have an account?{' '}
+        <a href="/signin" className="font-semibold text-indigo-600 hover:text-indigo-500">
+          Sign in here
+        </a>
+      </p>
     </div>
   )
 }
