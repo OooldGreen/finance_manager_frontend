@@ -12,6 +12,11 @@ const createUser = async (newUser) => {
   return response
 }
 
+const getUser = async (id) => {
+  const response = await axios.get(`${baseUrl}/${id}`)
+  return response
+}
+
 const deleteUser = (id) => {
   return axios.delete(`${baseUrl}/${id}`)
 }
@@ -25,4 +30,4 @@ const login = async (credentials) => {
   return await axios.post(`${baseUrl}/signin`, credentials)
 }
 
-export default { setToken, createUser, deleteUser, updateUser, login }
+export default { setToken, createUser, getUser, deleteUser, updateUser, login }
