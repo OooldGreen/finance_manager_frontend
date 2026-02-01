@@ -1,4 +1,4 @@
-import { Routes, Route, Link, Navigate, BrowserRouter } from 'react-router-dom'
+import { Routes, Route, Navigate, BrowserRouter } from 'react-router-dom'
 import "preline/preline";
 
 import Signup from './components/Signup'
@@ -7,7 +7,9 @@ import ProtectedRouter from './components/ProtectedRoute'
 import Layout from './components/Layout'
 import Dashboard from './components/pages/Dashboard'
 import Profile from './components/pages/Profile'
-import NotFound from './components/pages/NotFound';
+import NotFound from './components/pages/NotFound'
+import Settings from './components/pages/Settings'
+import Signout from './components/pages/Signout';
 
 import { AuthProvider } from './components/context/AuthContext'
 
@@ -24,7 +26,9 @@ function App() {
 
             <Route element={<ProtectedRouter><Layout/></ProtectedRouter>}>
               <Route path='/dashboard' element={<Dashboard/>}></Route>
-              <Route path='/profil' element={<Profile/>}></Route>
+              <Route path='/profile' element={<Profile/>}></Route>
+              <Route path='/settings' element={<Settings/>}></Route>
+              <Route path='/signout' element={<Signout/>}></Route>
             </Route>
 
             <Route path="*" element={<NotFound/>}></Route>

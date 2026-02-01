@@ -1,13 +1,10 @@
-import { useState } from "react"
 import Notification from '../../components/Notification'
 
-const UserForm = ({mode, handleSubmit, submitButton, user}) => {
-  const hiddenPassword = mode === 'profile'
+const UserForm = ({mode, handleSubmit, submitButton, user, setUser, error}) => {
+  const hiddenPassword = mode === 'profile' ? true : false
 
-  const [error, setError] = useState(null)
-  const [hint, setHint] = useState(null)
-  
   const handleChange = (event) => {
+    event.preventDefault()
     const { name, value } = event.target
     setUser({...user, [name]: value})
   }
@@ -15,8 +12,7 @@ const UserForm = ({mode, handleSubmit, submitButton, user}) => {
   return (
     <div>
       <form onSubmit={handleSubmit} className="space-y-6">
-        <Notification message={error} className='hidden text-xs text-red-600 mt-2'></Notification>
-        <Notification message={hint} className='hidden text-xs text-green-600 mt-2'></Notification>
+        {error && <Notification message={error} type="error"></Notification>}
         <div>
           <label className="block text-sm/6 font-medium text-gray-900">Username</label>
           <div className="mt-2">
@@ -96,6 +92,7 @@ const UserForm = ({mode, handleSubmit, submitButton, user}) => {
               placeholder="Select date"></input>
             </div>
         </div>
+        
         {submitButton}
       </form>
     </div>
