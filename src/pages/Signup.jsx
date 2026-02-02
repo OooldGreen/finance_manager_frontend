@@ -2,8 +2,8 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import usersService from '../services/users'
 import { usernameValidation, passwordValidation } from '../services/utils/userValidation'
-import UserForm from "./forms/UserForm"
-import Notification from "./Notification"
+import UserForm from "../components/forms/UserForm"
+import Notification from "../components/Notification"
 
 const Signup = () => {
   const navigate = useNavigate()

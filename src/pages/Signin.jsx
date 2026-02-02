@@ -1,8 +1,8 @@
 import { useState, useContext } from "react"
 import { useNavigate } from "react-router-dom"
 import usersService from '../services/users'
-import Notification from "./Notification"
-import AuthContext from './context/AuthContext'
+import Notification from "../components/Notification"
+import AuthContext from '../components/context/AuthContext'
 
 const Signin = () => {
   const navigate = useNavigate()

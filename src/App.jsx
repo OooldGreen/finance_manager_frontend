@@ -1,15 +1,18 @@
 import { Routes, Route, Navigate, BrowserRouter } from 'react-router-dom'
 import "preline/preline";
 
-import Signup from './components/Signup'
-import Signin from './components/Signin'
+import Layout from './components/layout/Layout'
 import ProtectedRouter from './components/ProtectedRoute'
-import Layout from './components/Layout'
-import Dashboard from './components/pages/Dashboard'
-import Profile from './components/pages/Profile'
-import NotFound from './components/pages/NotFound'
-import Settings from './components/pages/Settings'
-import Signout from './components/pages/Signout';
+import NotFound from './components/NotFound'
+import Signup from './pages/Signup'
+import Signin from './pages/Signin'
+import Dashboard from './pages/Dashboard'
+import Profile from './pages/Profile'
+import Settings from './pages/Settings'
+import Signout from './pages/Signout'
+import Assets from "./pages/Assets"
+import Records from './pages/Records'
+import Budgets from './pages/Budgets'
 
 import { AuthProvider } from './components/context/AuthContext'
 
@@ -29,6 +32,9 @@ function App() {
               <Route path='/profile' element={<Profile/>}></Route>
               <Route path='/settings' element={<Settings/>}></Route>
               <Route path='/signout' element={<Signout/>}></Route>
+              <Route path='/assets' element={<Assets/>}></Route>
+              <Route path='/records' element={<Records/>}></Route>
+              <Route path='/budgets' element={<Budgets/>}></Route>
             </Route>
 
             <Route path="*" element={<NotFound/>}></Route>
