@@ -11,9 +11,8 @@ export const AuthProvider = ({ children }) => {
     const initAuth = async () => {
       const savedUser = window.localStorage.getItem('loggedFinanceUser')
       if (savedUser) {
-        const { id } = JSON.parse(savedUser)
         try {
-          const response = await usersService.getUser(id)
+          const response = await usersService.getUser()
           setUser(response.data)
         } catch (err) {
           console.error('fail to get user information', err)

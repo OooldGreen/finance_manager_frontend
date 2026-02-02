@@ -24,13 +24,13 @@ const createUser = async (newUser) => {
   return response
 }
 
-const getUser = async (id) => {
-  const response = await axios.get(`${baseUrl}/${id}`, getConfig())
+const getUser = async () => {
+  const response = await axios.get(`${baseUrl}/me`, getConfig())
   return response
 }
 
-const deleteUser = (id) => {
-  return axios.delete(`${baseUrl}/${id}`, getConfig())
+const deleteUser = () => {
+  return axios.delete(`${baseUrl}/me`, getConfig())
 }
 
 const updateUser = async (user) => {
@@ -52,4 +52,4 @@ const logout = () => {
   delete axios.defaults.headers.common['Authorization']
 }
 
-export default { setToken, createUser, getUser, deleteUser, updateUser, updatePassword, login, logout }
+export default { setToken, getUser, createUser, deleteUser, updateUser, updatePassword, login, logout }
