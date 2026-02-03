@@ -1,17 +1,16 @@
-import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
-
+import { useContext, useEffect, useState } from "react"
 import { userAuth } from '../services/utils/userAuth'
 import usersService from '../services/users'
 
 import UserForm from "../components/forms/UserForm"
+import AuthContext from "../components/context/AuthContext"
 import Notification from "../components/Notification"
 import { AvatarIcon, ArcIcon } from "../components/ui/Icon"
 import { CloseButton } from "../components/ui/Button"
 
 const Profile = () => {
   const { user } = userAuth()
-  const navigate = useNavigate()
+  const { setUser } = useContext(AuthContext)
 
   const [userFormData, setUserFormData] = useState(null)
   const [error, setError] = useState(null)
@@ -41,10 +40,6 @@ const Profile = () => {
     return <div>loading...</div>
   }
 
-  const handleClose = () => {
-    navigate(-1)
-  }
-
   const handleCancel = () => {
     setUserFormData({
       username: user.username,
@@ -60,6 +55,7 @@ const Profile = () => {
       if (window.localStorage.getItem('loggedFinanceUser')) {
         const response = await usersService.updateUser(userFormData)
         if (response.status == 201 || response.status == 200) {
+          setUser(response.data)
           setHint("Successfully update user profile")
           setTimeout(() => {
             setHint(null)
@@ -124,7 +120,7 @@ const Profile = () => {
               <UserForm mode="profile" submitButton={submitButton} handleSubmit={handleSubmit} user={userFormData} setUser={setUserFormData} error={error}/>
 
               <div className="mt-5 sm:mt-10">
-                <p className="text-sm text-gray-500 dark:text-neutral-500">If you have any questions, please contact us at <a className="inline-flex items-center gap-x-1.5 text-blue-600 decoration-2 hover:underline focus:outline-hidden focus:underline font-medium dark:text-blue-500" href="#">example@site.com</a> or call at <a className="inline-flex items-center gap-x-1.5 text-blue-600 decoration-2 hover:underline focus:outline-hidden focus:underline font-medium dark:text-blue-500" href="tel:+1898345492">+1 898-34-5492</a></p>
+                {/* <p className="text-sm text-gray-500 dark:text-neutral-500">If you have any questions, please contact us at <a className="inline-flex items-center gap-x-1.5 text-blue-600 decoration-2 hover:underline focus:outline-hidden focus:underline font-medium dark:text-blue-500" href="#">example@site.com</a> or call at <a className="inline-flex items-center gap-x-1.5 text-blue-600 decoration-2 hover:underline focus:outline-hidden focus:underline font-medium dark:text-blue-500" href="tel:+1898345492">+1 898-34-5492</a></p> */}
               </div>
             </div>
           </div>
