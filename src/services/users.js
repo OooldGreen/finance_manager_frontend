@@ -8,7 +8,7 @@ const setToken = newToken => {
 }
 
 // get authorization
-const getConfig = () => {
+export const getConfig = () => {
   const loggedUserJSON = window.localStorage.getItem('loggedFinanceUser')
   if (loggedUserJSON) {
     const user = JSON.parse(loggedUserJSON)

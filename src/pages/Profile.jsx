@@ -20,7 +20,7 @@ const Profile = () => {
     const getUserData = async () => {
       if (user && user.id) {
         try {
-          const response = await usersService.getUser(user.id)
+          const response = await usersService.getUser()
           const userData = response.data
           setUserFormData({
             username: userData.username,
