@@ -13,6 +13,7 @@ import Signout from './pages/Signout'
 import Assets from "./pages/Assets"
 import Records from './pages/Records'
 import Budgets from './pages/Budgets'
+import AccountDetail from './pages/AccountDetail'
 
 import { AuthProvider } from './components/context/AuthContext'
 
@@ -33,6 +34,7 @@ function App() {
               <Route path='/settings' element={<Settings/>}></Route>
               <Route path='/signout' element={<Signout/>}></Route>
               <Route path='/assets' element={<Assets/>}></Route>
+              <Route path='/assets/:id' element={<AccountDetail/>}></Route>
               <Route path='/records' element={<Records/>}></Route>
               <Route path='/budgets' element={<Budgets/>}></Route>
             </Route>

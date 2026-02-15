@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import AccountCreateForm from "../components/forms/AccountCreateForm"
 import AssetList from "../components/forms/AssetList"
 import { PlusIcon } from "../components/ui/Icon"
 import accountsService from "../services/accounts"
 
 const Assets = () => {
+  const navigate = useNavigate()
   const [accounts, setAccounts] = useState([])
   const [assets, setAssets] = useState({
     total: 0,
@@ -11,6 +14,7 @@ const Assets = () => {
     currency: "EUR"
   })
   const [loading, setLoading] = useState(true)
+  const [showAccountCreateForm, setShowAccountCreateForm] = useState(false)
 
   useEffect(() => {
     const getAccountsAndBalances = async () => {
@@ -30,7 +34,22 @@ const Assets = () => {
       }
     }
     getAccountsAndBalances()
-  }, [])  
+  }, [])
+
+  const updateAccount = async () => {
+    try {
+      const accountsResponse = await accountsService.getAllAccounts()
+      const balancesResponse = await accountsService.getTotalBalances()
+      setAccounts(accountsResponse.data)
+      setAssets({
+        total: balancesResponse.data.totalAssets || 0,
+        debts: balancesResponse.data.totalDebts || 0,
+        currency: balancesResponse.data.currency || "EUR" 
+      })
+    } catch (err) {
+      console.log('update failed.', err)
+    }
+  }
 
   if (loading) {
     return (
@@ -39,7 +58,7 @@ const Assets = () => {
   }
 
   return (
-    <div className="w-full bg-gray-100">
+    <div className="w-full min-h-screen bg-gray-100">
       <div className="grid grid-cols-1 gap-6 p-8 md:p-12 max-w-3xl mx-auto">
         <div className=" flex flex-col bg-white bg-card rounded-xl">
           <div className="p-4 relative z-10 bg-card rounded-xl md:p-10">
@@ -67,9 +86,9 @@ const Assets = () => {
             </div>
           </div>
         </div>
-        <AssetList accounts={accounts}/>
+        <AssetList accounts={accounts} onAccountClick={ (id) => { navigate(`/assets/${id}`) } }/>
         <div className="min-h-20 flex flex-col bg-white bg-card shadow-2xs rounded-xl">
-          <button className="p-4 flex flex-auto flex-col justify-center items-center">
+          <button className="p-4 flex flex-auto flex-col justify-center items-center" onClick={() => setShowAccountCreateForm(!showAccountCreateForm)}>
             <span className="inline-flex justify-center items-center size-11 rounded-full bg-gray-100 text-foreground">
               <PlusIcon />
             </span>
@@ -78,6 +97,13 @@ const Assets = () => {
             </p>
           </button>
         </div>
+        {showAccountCreateForm && 
+          <AccountCreateForm 
+            showForm={showAccountCreateForm}
+            setShowForm={setShowAccountCreateForm}
+            onSuccess={updateAccount}
+          />
+        }
       </div>
     </div>
   )

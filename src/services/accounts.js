@@ -12,4 +12,29 @@ const getTotalBalances =  async () => {
   return response
 }
 
-export default { getTotalBalances, getAllAccounts }
+const getAccountTypes = async () => {
+  const response = await axios.get(`${baseUrl}/types`, getConfig())
+  return response
+}
+
+const createAccount = async (accountData) => {
+  const response = await axios.post(`${baseUrl}/create-account`, accountData, getConfig())
+  return response
+}
+
+const getAccountDetail = async (accountId) => {
+  const response = await axios.get(`${baseUrl}/${accountId}`, getConfig())
+
+  return response
+}
+
+const updateAccountDetail = async (accountId, newAccountDetail) => {
+  const response = await axios.patch(`${baseUrl}/${accountId}`, newAccountDetail, getConfig())
+  return response
+}
+
+const deleteAccount = (accountId) => {
+  return axios.delete(`${baseUrl}/${accountId}`, getConfig())
+}
+
+export default { getTotalBalances, getAllAccounts, getAccountTypes, createAccount, getAccountDetail, updateAccountDetail, deleteAccount }

@@ -75,7 +75,7 @@ const Settings= () => {
   
   return (
     <div>
-      <div id="hs-bg-gray-on-hover-cards" className="flex items-center hs-overlay size-full fixed top-0 start-0 z-80 overflow-x-hidden overflow-y-auto pointer-events-none bg-neutral-900/50" role="dialog" tabIndex="-1" aria-labelledby="hs-bg-gray-on-hover-cards-label">
+      <div className="flex items-center hs-overlay size-full fixed top-0 start-0 z-80 overflow-x-hidden overflow-y-auto pointer-events-none bg-neutral-900/50" role="dialog" tabIndex="-1">
         <div className="hs-overlay-open:opacity-100 hs-overlay-open:duration-500 ease-out transition-all sm:max-w-lg sm:w-full sm:mx-auto mt-10">
           <div className="max-h-full overflow-hidden flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800 dark:shadow-neutral-700/70">
             <div className="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-800">
@@ -95,8 +95,7 @@ const Settings= () => {
                   Password
                 </h3>
               </div>
-              <div className="sm:col-span-12 mt-2 mb-5 border-t border-gray-200 dark:border-neutral-700"></div>
-              <div>
+              <div className="sm:col-span-12 mt-4 mb-5">
                 {!showPasswordChangingForm && <button type="button" onClick={handleShowPasswordChangingForm} className="py-2 px-4 inline-flex justify-center items-center gap-x-2 font-medium rounded-lg border border-gray-200 bg-gray-100 text-sm font-medium text-blue-600 hover:bg-blue-700 hover:text-white">Reset Password</button>}
                 {showPasswordChangingForm && <PasswordChangingForm showPasswordChangingForm={showPasswordChangingForm} setShowPasswordChangingForm={setShowPasswordChangingForm}/>}
               </div>
