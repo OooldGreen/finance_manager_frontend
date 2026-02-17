@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate, BrowserRouter } from 'react-router-dom'
+import { Toaster } from 'react-hot-toast'
 import "preline/preline";
 
 import Layout from './components/layout/Layout'
@@ -21,6 +22,7 @@ function App() {
 
   return (
     <>
+      <Toaster postion="top-centre" renverseOrder={false}></Toaster>
       <AuthProvider>
         <BrowserRouter>
           <Routes>

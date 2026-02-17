@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import { toast } from 'react-hot-toast'
 import { CloseIcon, WarningIcon } from "../ui/Icon"
 import accountsService from '../../services/accounts'
 
@@ -30,7 +31,7 @@ const AccountCard = ({ showForm, setShowForm, accountDetail, accountId, onSaveSu
         onSaveSuccess()
       }
     } catch (err) {
-      console.log('Failed to save changes', err)
+      toast.error('Failed to save changes')
     }
   }
 
@@ -45,9 +46,10 @@ const AccountCard = ({ showForm, setShowForm, accountDetail, accountId, onSaveSu
       if (response.status == 204) {
         setShowForm(!showForm)
         navigate('/assets')
+        toast.success('Delete asset account successful.')
       }
     } catch (err) {
-      console.log('Failed to delete asset account', err)
+      toast.error('Failed to delete asset account')
     }
   }
 

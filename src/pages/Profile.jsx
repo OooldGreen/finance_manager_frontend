@@ -1,10 +1,10 @@
 import { useContext, useEffect, useState } from "react"
+import { toast } from 'react-hot-toast'
 import { userAuth } from '../services/utils/userAuth'
 import usersService from '../services/users'
 
 import UserForm from "../components/forms/UserForm"
 import AuthContext from "../components/context/AuthContext"
-import Notification from "../components/Notification"
 import { AvatarIcon, ArcIcon } from "../components/ui/Icon"
 import { CloseButton } from "../components/ui/Button"
 
@@ -13,8 +13,6 @@ const Profile = () => {
   const { setUser } = useContext(AuthContext)
 
   const [userFormData, setUserFormData] = useState(null)
-  const [error, setError] = useState(null)
-  const [hint, setHint] = useState(null)
 
   useEffect(() => {
     const getUserData = async () => {
@@ -29,7 +27,7 @@ const Profile = () => {
             dateOfBirth: userData?.dateOfBirth || '' 
           })
         } catch (err) {
-          console.error("fail to get user's information", err)
+          toast.error("fail to get user's information")
         }
       }
     }
@@ -56,18 +54,12 @@ const Profile = () => {
         const response = await usersService.updateUser(userFormData)
         if (response.status == 201 || response.status == 200) {
           setUser(response.data)
-          setHint("Successfully update user profile")
-          setTimeout(() => {
-            setHint(null)
-          }, 5000)
+          toast.success("Successfully update user profile")
         }
       }
     } catch(err) {
-      setError('An error occurred.')
+      toast.error('An error occurred.')
       console.log(err)
-      setTimeout(() => {
-        setError(null)
-      }, 5000)
     }
   }
 
@@ -87,8 +79,6 @@ const Profile = () => {
   
   return (
     <div>
-      {hint && <Notification message={hint} type="success"></Notification>}
-      {error && <Notification message={error} type="error"></Notification>}
       <div id="hs-profile-modal" className="hs-overlay size-full fixed top-0 start-0 z-80 overflow-x-hidden overflow-y-auto pointer-events-none bg-neutral-900/50" role="dialog" tabIndex="-1">
         <div className="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 ease-out transition-all sm:max-w-lg sm:w-full sm:mx-auto mt-10">
           <div className="relative flex flex-col bg-white shadow-lg rounded-xl pointer-events-auto dark:bg-neutral-800">
@@ -117,7 +107,7 @@ const Profile = () => {
               </div>
 
               {/* user information */}
-              <UserForm mode="profile" submitButton={submitButton} handleSubmit={handleSubmit} user={userFormData} setUser={setUserFormData} error={error}/>
+              <UserForm mode="profile" submitButton={submitButton} handleSubmit={handleSubmit} user={userFormData} setUser={setUserFormData}/>
 
               <div className="mt-5 sm:mt-10">
                 {/* <p className="text-sm text-gray-500 dark:text-neutral-500">If you have any questions, please contact us at <a className="inline-flex items-center gap-x-1.5 text-blue-600 decoration-2 hover:underline focus:outline-hidden focus:underline font-medium dark:text-blue-500" href="#">example@site.com</a> or call at <a className="inline-flex items-center gap-x-1.5 text-blue-600 decoration-2 hover:underline focus:outline-hidden focus:underline font-medium dark:text-blue-500" href="tel:+1898345492">+1 898-34-5492</a></p> */}

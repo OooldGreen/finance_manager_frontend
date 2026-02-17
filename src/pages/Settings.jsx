@@ -1,14 +1,13 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { toast } from 'react-hot-toast'
 import usersService from '../services/users'
 import PasswordChangingForm from "../components/forms/PasswordChangingForm"
-import Notification from "../components/Notification"
 import { CloseIcon, WarningIcon } from "../components/ui/Icon"
 
 const Settings= () => {
   const navigate = useNavigate()
   const [showPasswordChangingForm, setShowPasswordChangingForm] = useState(null)
-  const [error, setError] = useState(null)
   const [showConfirmDelete, setShowConfirmDelete] = useState(false)
 
   const handleShowPasswordChangingForm = () => {
@@ -27,17 +26,13 @@ const Settings= () => {
         navigate('/signin', { replace: true })
       }
     } catch {
-      setError("Fail to delete user")
-      setTimeout(() => {
-        setError(null)
-      }, 5000)
+      toast.error("Fail to delete user")
     }
   }
 
   if(showConfirmDelete) {
     return (
       <div>
-        {error && <Notification type="error" message={error}></Notification>}
         <div className="flex items-center hs-overlay size-full fixed top-0 start-0 z-80 overflow-x-hidden overflow-y-auto bg-neutral-900/50">
           <div className="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 ease-out transition-all md:max-w-2xl md:w-full m-3 md:mx-auto">
             <div className="relative flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl overflow-hidden dark:bg-neutral-900 dark:border-neutral-800">

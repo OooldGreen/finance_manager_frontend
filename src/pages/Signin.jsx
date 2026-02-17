@@ -1,7 +1,7 @@
 import { useState, useContext } from "react"
 import { useNavigate } from "react-router-dom"
+import { toast } from 'react-hot-toast'
 import usersService from '../services/users'
-import Notification from "../components/Notification"
 import AuthContext from '../components/context/AuthContext'
 
 const Signin = () => {
@@ -11,7 +11,6 @@ const Signin = () => {
     username: '',
     password: ''
   })
-  const [error, setError] = useState(null)
 
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -28,10 +27,7 @@ const Signin = () => {
       setUser(response.data)
       navigate('/dashboard')
     } catch {
-      setError('Invalid username or password.')
-      setTimeout(() => {
-        setError(null)
-      }, 5000)
+      toast.error('Invalid username or password.')
     }
   }
 
@@ -45,7 +41,6 @@ const Signin = () => {
       <div className="mt-10 bg-white border border-gray-200 rounded-xl shadow-2xs dark:bg-neutral-900 dark:border-neutral-700 sm:mx-auto sm:w-full sm:max-w-sm">
         <div className="p-4 sm:p-7">
           <form onSubmit={handleSubmit} className="space-y-6">
-            {error && <Notification message={error} type="error"></Notification>}
             <div >
               <label className="block text-sm/6 font-medium text-gray-900">
                 Username

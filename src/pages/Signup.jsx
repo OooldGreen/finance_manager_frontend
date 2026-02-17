@@ -1,9 +1,9 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { toast } from 'react-hot-toast'
 import usersService from '../services/users'
 import { usernameValidation, passwordValidation } from '../services/utils/userValidation'
 import UserForm from "../components/forms/UserForm"
-import Notification from "../components/Notification"
 
 const Signup = () => {
   const navigate = useNavigate()
@@ -19,25 +19,18 @@ const Signup = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    setError(null)
 
     // verify username
     const usernameError = usernameValidation(user.username)
     if (usernameError) {
-      setError(usernameError)
-      setTimeout(() => {
-        setError(null)
-      }, 5000)
+      toast.error(usernameError)
       return
     }
 
     // verify password
     const passwordError = passwordValidation(user.password, user.confirmPassword)
     if (passwordError) {
-      setError(passwordError)
-      setTimeout(() => {
-        setError(null)
-      }, 5000)
+      toast.error(passwordError)
       return
     }
 
@@ -48,10 +41,7 @@ const Signup = () => {
         navigate('/signin')
       }
     } catch (err) {
-      setError(err.message || 'An error occurred.')
-      setTimeout(() => {
-        setError(null)
-      }, 5000)
+      toast.error('An error occurred.')
     }
   }
 
@@ -65,14 +55,13 @@ const Signup = () => {
 
  return (
     <div className="flex min-h-full bg-gray-100 dark:bg-neutral-800 flex-col justify-center px-6 py-12 lg:px-8">
-      {error && <Notification message={error} type="error"></Notification>}
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Sign up</h2>
       </div>
 
       <div className="mt-7 bg-white border border-gray-200 rounded-xl shadow-2xs dark:bg-neutral-900 dark:border-neutral-700 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="p-4 sm:p-10">
-          <UserForm mode="signup" submitButton={submitButton} handleSubmit={handleSubmit} user={user} setUser={setUser} error={error}/>
+          <UserForm mode="signup" submitButton={submitButton} handleSubmit={handleSubmit} user={user} setUser={setUser}/>
         </div>
       </div>
 

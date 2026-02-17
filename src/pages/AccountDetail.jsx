@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
+import { toast } from 'react-hot-toast'
 import AccountCard from "../components/forms/AccountCard"
 import { ArrowLeftIcon } from '../components/ui/Icon'
-import Notification from "../components/Notification"
 import accountsService from '../services/accounts'
 
 const AccountDetail = () => {
   const { id } = useParams()
   const navigate = useNavigate()
-  const [error, setError] = useState(null)
-  const [hint, setHint] = useState(null)
   const [accountDetail, setAccountDetail] = useState({
     name : '',
     balance: 0,
@@ -33,10 +31,7 @@ const AccountDetail = () => {
           })
         }
       } catch (err) {
-        setError('Failed to get account detail')
-        setTimeout(() => {
-          setError(null)
-        }, 5000)
+        toast.error('Failed to get account detail')
       }
     }
     getData()
@@ -55,10 +50,7 @@ const AccountDetail = () => {
       })
     }
     setShowForm(!setShowForm)
-    setHint('Modify account information successed.')
-    setTimeout(() => {
-      setHint(null)
-    }, 5000)
+    toast.success('Modify account information successed.')
   }
 
   if(loading) {
@@ -69,8 +61,6 @@ const AccountDetail = () => {
 
   return (
     <div className="w-full min-h-screen bg-gray-100">
-      {error && <Notification message={error} type='error'></Notification>}
-      {hint && <Notification message={hint} type='success'></Notification>}
       <div className="grid grid-cols-1 gap-6 p-8 md:p-12 max-w-3xl mx-auto">
         <div className="flex flex-col bg-white bg-card rounded-xl">
           <div className="flex items-center px-4 pt-10 h-3 flex text-gray-500 justify-between md:px-10 md:pt-10">
