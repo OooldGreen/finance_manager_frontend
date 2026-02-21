@@ -1,5 +1,3 @@
-import Notification from '../../components/Notification'
-
 const UserForm = ({mode, handleSubmit, submitButton, user, setUser}) => {
   const hiddenPassword = mode === 'profile' ? true : false
 

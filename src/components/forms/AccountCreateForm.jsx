@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react"
+import { toast } from 'react-hot-toast'
 import { CloseIcon } from "../ui/Icon"
-import Notification from "../Notification"
 import accountsService from '../../services/accounts'
 
 const AccountCreateForm = ({showForm, setShowForm, onSuccess}) => {
-  const [error, setError] = useState(null)
   const [form, setFormData] = useState({
     name: '',
     type: 'CASH',
@@ -31,10 +30,7 @@ const AccountCreateForm = ({showForm, setShowForm, onSuccess}) => {
         onSuccess()
       }
     } catch (err) {
-      setError('Create account failed')
-      setTimeout(() => {
-        setError(null)
-      }, 5000)
+      toast.error('Create account failed')
     }
   }
 
@@ -45,7 +41,6 @@ const AccountCreateForm = ({showForm, setShowForm, onSuccess}) => {
  
  return (
     <div>
-      {error && <Notification message={error} type='error'></Notification>}
       <div className="flex items-center hs-overlay size-full fixed top-0 start-0 z-80 overflow-x-hidden overflow-y-auto pointer-events-none bg-neutral-900/50" role="dialog" tabIndex="-1">
         <div className="hs-overlay-open:opacity-100 hs-overlay-open:duration-500 ease-out transition-all sm:max-w-lg sm:w-full sm:mx-auto mt-10">
           <div className="max-h-full overflow-hidden flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl pointer-events-auto dark:bg-neutral-900 dark:border-neutral-800 dark:shadow-neutral-700/70">

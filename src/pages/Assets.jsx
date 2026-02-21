@@ -89,8 +89,8 @@ const Assets = () => {
         <AssetList accounts={accounts} onAccountClick={ (id) => { navigate(`/assets/${id}`) } }/>
         <div className="min-h-20 flex flex-col bg-white bg-card shadow-2xs rounded-xl">
           <button className="p-4 flex flex-auto flex-col justify-center items-center" onClick={() => setShowAccountCreateForm(!showAccountCreateForm)}>
-            <span className="inline-flex justify-center items-center size-11 rounded-full bg-gray-100 text-foreground">
-              <PlusIcon />
+            <span className="inline-flex justify-center items-center size-11 rounded-full bg-gray-100 text-foreground hover:bg-gray-200">
+              <PlusIcon className="size-7 text-gray-500"/>
             </span>
             <p className="mt-2 text-sm text-foreground">
               Add an account

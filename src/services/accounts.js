@@ -18,7 +18,7 @@ const getAccountTypes = async () => {
 }
 
 const createAccount = async (accountData) => {
-  const response = await axios.post(`${baseUrl}/create-account`, accountData, getConfig())
+  const response = await axios.post(baseUrl, accountData, getConfig())
   return response
 }
 

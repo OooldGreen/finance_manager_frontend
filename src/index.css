@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import 'vanilla-calendar-pro/styles/index.css';
 
 /* Preline UI */
 @source "./node_modules/preline/dist/*.js";
