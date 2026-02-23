@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom"
 import { toast } from 'react-hot-toast'
 import AccountCard from "../components/forms/AccountCard"
 import { ArrowLeftIcon } from '../components/ui/Icon'
+import RecordForm from "../components/forms/RecordForm"
 import accountsService from '../services/accounts'
 
 const AccountDetail = () => {
@@ -16,6 +17,9 @@ const AccountDetail = () => {
   })
   const [showForm, setShowForm] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [records, setRecords] = useState([])
+  const [showRecordForm, setShowRecordForm] = useState(false)
+  const [selectedId, setSelectedId] = useState(null)
 
   useEffect(() => {
     const getData = async() => {
@@ -30,6 +34,8 @@ const AccountDetail = () => {
             currency: detail.currency || 'EUR'
           })
         }
+        const recordsResponse = await accountsService.getRecordsByAccount(id)
+        setRecords(recordsResponse.data)
       } catch (err) {
         toast.error('Failed to get account detail')
       }
@@ -70,14 +76,43 @@ const AccountDetail = () => {
           <div className="p-4 relative z-10 bg-card rounded-xl md:px-10 md:pb-10 md:pt-8">
             <h3 className="text-xl font-bold text-foreground">{accountDetail.name}</h3>
             <div className="mt-3">
-              <span className="text-4xl font-bold text-foreground">€{accountDetail.balance}</span>
+              <span className="text-4xl font-bold text-foreground">{accountDetail.balance >= 0 ? `€${Math.abs(accountDetail.balance)}` : `-€${Math.abs(accountDetail.balance)}`}</span>
             </div>
           </div>
+        </div>
+
+        <div className="px-12 rounded-xl block bg-white bg-layer focus:outline-hidden divide-y divide-gray-200 dark:divide-neutral-800">
+          {records.map(record => (
+            <div className="flex items-center gap-x-7 py-6" key={record.id}>
+              <button 
+                className="w-full text-left grow" 
+                onClick={ () => { 
+                  setSelectedId(record.id)
+                  setShowRecordForm(!showRecordForm)
+                } }>
+                <h3 className="flex items-between justify-between font-semibold text-gray-800 dark:text-neutral-200">
+                  <div>{record.title}</div>
+                  <div className={record.amount >= 0 ? 'text-emerald-600' : 'text-rose-600'}>{record.amount >= 0 ? `€${Math.abs(record.amount)}` : ` -€${Math.abs(record.amount)}`}</div>
+                </h3>
+                {record.description && <p className="mt-1 text-sm text-gray-500 dark:text-neutral-500">{record.description}</p>}
+                <div className="text-sm">{record.ticketCompletionDate.slice(0, 10)}</div>
+              </button>
+            </div>
+          ))}
         </div>
       </div>
 
       {showForm &&
         <AccountCard showForm={showForm} setShowForm={setShowForm} accountDetail={accountDetail} accountId={id} onSaveSuccess={onSaveSuccess}/>
+      }
+
+      {showRecordForm && 
+        <RecordForm 
+          mode="modify"
+          recordId={selectedId} 
+          showRecordForm={showRecordForm}
+          setShowRecordForm={setShowRecordForm}
+        />
       }
     </div>
   )

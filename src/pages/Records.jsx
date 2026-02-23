@@ -1,41 +1,14 @@
 import { useState, useContext } from "react"
-import { toast } from 'react-hot-toast'
 import { PlusIcon, ChevronLeftIcon, ChevronRightIcon } from "../components/ui/Icon"
 import RecordList from "../components/forms/RecordList"
 import RecordForm from "../components/forms/RecordForm"
-import recordsService from '../services/records'
 import RecordContext from "../components/context/RecordContext"
-import { RecordProvider } from "../components/context/RecordContext"
 
 const Records = () => {
-  return (
-    <RecordProvider>
-      <RecordsContent/>
-    </RecordProvider>
-  )
-}
-
-export default Records
-
-const RecordsContent = () => {
-  const { query, setQuery, getRecords, loading, monthlyBalance } = useContext(RecordContext)
+  const { query, setQuery, loading, monthlyBalance } = useContext(RecordContext)
   
   const [showRecordForm, setShowRecordForm] = useState(false)
-  const [showConfirmDelete, setShowConfirmDelete] = useState(false)
   const [showModifyForm, setShowrModifyForm] = useState(false)
-
-  const handleDelete = async (id) => {
-    try {
-      const response = await recordsService.deleteRecord(id)
-      if (response.status == 204) {
-        setShowConfirmDelete(!showConfirmDelete)
-        toast.success('Record deleted.')
-        getRecords()
-      }
-    } catch {
-      toast.error('Fail to delete record')
-    }
-  }
 
   const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
   const formatMonth = () => monthNames[query.month - 1]
@@ -93,9 +66,6 @@ const RecordsContent = () => {
         </div>
 
         <RecordList 
-          handleDelete={handleDelete}
-          showConfirmDelete={showConfirmDelete}
-          setShowConfirmDelete={setShowConfirmDelete}
           showModifyForm={showModifyForm}
           setShowrModifyForm={() => setShowrModifyForm(!showModifyForm)}
         />
@@ -116,3 +86,5 @@ const RecordsContent = () => {
     </div>
   )
 }
+
+export default Records

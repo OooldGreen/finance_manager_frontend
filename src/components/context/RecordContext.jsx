@@ -17,6 +17,20 @@ export const RecordProvider = ({children}) => {
   const [monthlyBalance, setMonthlyBalance] = useState(null)
   const [totalPages, setTotalPages] = useState(0)
   const [loading, setLoading] = useState(true)
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false)
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await recordsService.deleteRecord(id)
+      if (response.status == 204) {
+        setShowConfirmDelete(!showConfirmDelete)
+        toast.success('Record deleted.')
+        getRecords()
+      }
+    } catch {
+      toast.error('Fail to delete record')
+    }
+  }
 
   const getRecords = async () => {
     try {
@@ -46,7 +60,7 @@ export const RecordProvider = ({children}) => {
 
   const getMonthlyBalance = async () => {
     try {
-      const monthlyBalanceReponse = await recordsService.getMonthlyBalance()
+      const monthlyBalanceReponse = await recordsService.getMonthlyBalance(query.year, query.month)
       if (monthlyBalanceReponse.status === 200) {
         setMonthlyBalance(monthlyBalanceReponse.data)
       }
@@ -57,7 +71,7 @@ export const RecordProvider = ({children}) => {
 
   const onSuccess = (mode) => {
     toast.success(mode === 'create' ? 'Create record success.' : 'Update record success')
-    getRecords()
+    getData()
   }
 
   const formatAdapteur = (s) => (
@@ -81,7 +95,7 @@ export const RecordProvider = ({children}) => {
   }
 
   return (
-    <RecordContext.Provider value={{ query, setQuery, records, monthlyBalance, totalPages, onSuccess, formatAdapteur, loading, setLoading, getRecords, getMonthlyBalance }}>
+    <RecordContext.Provider value={{ query, setQuery, records, monthlyBalance, totalPages, onSuccess, formatAdapteur, loading, getRecords, handleDelete, showConfirmDelete, setShowConfirmDelete, getData }}>
       {!loading && children}
     </RecordContext.Provider>
   )

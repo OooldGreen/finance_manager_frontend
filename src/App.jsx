@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate, BrowserRouter } from 'react-router-dom'
+import { Routes, Route, Navigate, BrowserRouter, Outlet } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import "preline/preline";
 
@@ -17,6 +17,7 @@ import Budgets from './pages/Budgets'
 import AccountDetail from './pages/AccountDetail'
 
 import { AuthProvider } from './components/context/AuthContext'
+import { RecordProvider } from './components/context/RecordContext';
 
 function App() {
 
@@ -35,9 +36,15 @@ function App() {
               <Route path='/profile' element={<Profile/>}></Route>
               <Route path='/settings' element={<Settings/>}></Route>
               <Route path='/signout' element={<Signout/>}></Route>
-              <Route path='/assets' element={<Assets/>}></Route>
-              <Route path='/assets/:id' element={<AccountDetail/>}></Route>
-              <Route path='/records' element={<Records/>}></Route>
+              <Route element={
+                <RecordProvider>
+                  <Outlet/>
+                </RecordProvider>
+              }>
+                <Route path='/assets' element={<Assets/>}></Route>
+                <Route path='/assets/:id' element={<AccountDetail/>}></Route>
+                <Route path='/records' element={<Records/>}></Route>
+              </Route>
               <Route path='/budgets' element={<Budgets/>}></Route>
             </Route>
 

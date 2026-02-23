@@ -24,7 +24,11 @@ const createAccount = async (accountData) => {
 
 const getAccountDetail = async (accountId) => {
   const response = await axios.get(`${baseUrl}/${accountId}`, getConfig())
+  return response
+}
 
+const getRecordsByAccount = async (accountId) => {
+  const response = await axios.get(`${baseUrl}/${accountId}/records`, getConfig())
   return response
 }
 
@@ -37,4 +41,4 @@ const deleteAccount = (accountId) => {
   return axios.delete(`${baseUrl}/${accountId}`, getConfig())
 }
 
-export default { getTotalBalances, getAllAccounts, getAccountTypes, createAccount, getAccountDetail, updateAccountDetail, deleteAccount }
+export default { getTotalBalances, getAllAccounts, getAccountTypes, createAccount, getAccountDetail, getRecordsByAccount, updateAccountDetail, deleteAccount }

@@ -10,8 +10,14 @@ const getRecords = async (params) => {
   return response
 }
 
-const getMonthlyBalance = async () => {
-  const response = await axios.get(`${baseUrl}/month-balance`, getConfig())
+const getMonthlyBalance = async (year, month) => {
+  const response = await axios.get(`${baseUrl}/month-balance`, {
+    params: {
+      year,
+      month,
+    },
+    ...getConfig()
+  })
   return response
 }
 

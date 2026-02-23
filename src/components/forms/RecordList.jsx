@@ -6,8 +6,8 @@ import { SortIcon } from "../ui/Icon"
 import recordsService from "../../services/records"
 import ConfirmDeleteModal from "../ui/ConfirmDeleteModal"
 
-const RecordList = ({ handleDelete, showConfirmDelete, setShowConfirmDelete, showModifyForm, setShowrModifyForm }) => {
-  const { query, setQuery, totalPages, records, getRecords, formatAdapteur } = useContext(RecordContext)
+const RecordList = ({showModifyForm, setShowModifyForm}) => {
+  const { query, setQuery, totalPages, records, getData, formatAdapteur, handleDelete, showConfirmDelete, setShowConfirmDelete } = useContext(RecordContext)
   const [selectedId, setSelectedId] = useState(null)
   const [selectedIds, setSelectedIds] = useState([])
   const [showConfirmBatchDelete, setShowConfirmBatchDelete] = useState(false)
@@ -23,7 +23,7 @@ const RecordList = ({ handleDelete, showConfirmDelete, setShowConfirmDelete, sho
       if (response.status === 204) {
         toast.success('Delete records success.')
         setSelectedIds([])
-        getRecords()
+        getData()
         setShowConfirmBatchDelete(!showConfirmBatchDelete)
       }
     } catch {
@@ -233,7 +233,7 @@ const RecordList = ({ handleDelete, showConfirmDelete, setShowConfirmDelete, sho
           mode="modify"
           recordId={selectedId} 
           showRecordForm={showModifyForm}
-          setShowRecordForm={setShowrModifyForm}
+          setShowRecordForm={setShowModifyForm}
         />
       }
     </div>
