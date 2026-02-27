@@ -130,7 +130,7 @@ const RecordList = ({showModifyForm, setShowModifyForm}) => {
                 key={record.id}
                 onClick={() => {
                   setSelectedId(record.id)
-                  setShowrModifyForm(!showModifyForm)
+                  setShowModifyForm(!showModifyForm)
                 }} 
               >
                 {/* checkbox */}

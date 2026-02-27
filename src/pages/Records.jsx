@@ -4,11 +4,12 @@ import RecordList from "../components/forms/RecordList"
 import RecordForm from "../components/forms/RecordForm"
 import RecordContext from "../components/context/RecordContext"
 
+
 const Records = () => {
   const { query, setQuery, loading, monthlyBalance } = useContext(RecordContext)
   
   const [showRecordForm, setShowRecordForm] = useState(false)
-  const [showModifyForm, setShowrModifyForm] = useState(false)
+  const [showModifyForm, setShowModifyForm] = useState(false)
 
   const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
   const formatMonth = () => monthNames[query.month - 1]
@@ -67,7 +68,7 @@ const Records = () => {
 
         <RecordList 
           showModifyForm={showModifyForm}
-          setShowrModifyForm={() => setShowrModifyForm(!showModifyForm)}
+          setShowModifyForm={() => setShowModifyForm(!showModifyForm)}
         />
       </div>
 
