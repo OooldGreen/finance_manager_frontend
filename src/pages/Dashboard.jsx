@@ -1,12 +1,11 @@
 import { useState } from 'react'
 import { userAuth } from '../services/utils/userAuth'
 import MyDatePicker from '../components/ui/MyDatePicker'
-import { ConfigProvider, Select, Segmented } from 'antd'
-import ExpensePieChart from '../components/charts/ExpensePieChart'
+import MyPieChart from '../components/charts/MyPieChart'
+import MyBarChart from '../components/charts/MyBarChart'
 
 const Dashboard = () => {
   const { user } = userAuth()
-  
 
   const onDatePickerChange = () => {
 
@@ -144,22 +143,11 @@ const Dashboard = () => {
         </div>
 
         {/* pie chart,  */}
-        <div className="flex justify-between items-center mt-2 grid grid-cols-2 gap-2 p-4 md:p-5 min-h-102.5 flex-col">
-          <ExpensePieChart/> 
-
+        <div className="flex justify-between items-center mt-2 grid grid-cols-2 gap-2 p-4 md:p-5 min-h-102.5 flex-col w-full h-[600px]">
+          <MyPieChart />
           {/* bar chart */}
-          <div>
-            <div className="flex justify-between items-center mt-2 p-4 md:p-5 min-h-102.5 flex-col">
-              <div className="p-4 bg-white border border-gray-200 shadow-2xs rounded-xl">
-                {/* date picker */}
-                  <div className='flex justify-end p-4'><MyDatePicker mode='month' onChange={onDatePickerChange}/></div>
-                  chart2 支出预算和实际双柱状对比图：按分类画，可以按月份筛选
-              </div>
-            </div>
-          </div>
+          <MyBarChart />
         </div>
-
-        
       </div>
 
       {/* heatmap */}

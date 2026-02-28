@@ -1,15 +1,11 @@
 import { useState, useEffect } from 'react'
-import { Cell, Pie, PieChart, Tooltip, Legend } from 'recharts'
+import { Cell, Pie, PieChart, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { ConfigProvider, Select, Segmented } from 'antd'
 import dayjs from 'dayjs'
 import MyDatePicker from '../ui/MyDatePicker'
 import dashboardService from '../../services/dashboard'
 
-// 切换年月要自动chong x重新请求
-// 没有请求时候的显示
-// 怎么把饼图的指示优化一下
-
-const ExpensePieChart = ({ defaultIndex }) => {
+const MyPieChart = () => {
   const [dateType, setDateType] = useState('month')
   const [type, setType] = useState('EXPENSE')
   const [date, setDate] = useState({
@@ -34,12 +30,17 @@ const ExpensePieChart = ({ defaultIndex }) => {
     setDate({ startDate, endDate }) 
   }
 
+  const handleTypeChange = (type) => {
+    setDateType(type)
+    onDatePickerChange(dayjs())
+  }
+
   useEffect(() => {
     getData()
-    console.log(data)
   }, [date.startDate, date.endDate, type, dateType])
 
   const getData = async () => {
+    setData([])
     try {
       const response = await dashboardService.getDataByCat(type, date.startDate, date.endDate)
       if (response.status === 200) {
@@ -71,10 +72,28 @@ const ExpensePieChart = ({ defaultIndex }) => {
     }
     return colorMap[name] || '#CFD8DC'
   }
+
+  const CustomeTooltip = ({active, payload}) => {
+    if (active && payload && payload.length) {
+      const { name, value } = payload[0].payload
+      const totalAmount = data.reduce((sum, item) => sum + item.value, 0)
+      const percent = totalAmount > 0 ? (value / totalAmount) : 0
+      console.log(payload)
+      return (
+        <div className='bg-white/80 backdrop-blur-md p-4 border border-gray-50 shadow-sm rounded-xl '>
+          <p className='text-sm font-bold text-gray-600 flex items-center gap-2'>
+            <span className='w-2 h-2 rounded-full' style={{ backgroundColor: payload[0].payload.fill}}></span>
+            {name}: {(percent * 100).toFixed(1)}%, € {value.toFixed(2)} 
+          </p>
+        </div>
+      )
+    }
+    return null
+  }
   
   return (
-    <div className="p-4 bg-white border border-gray-200 shadow-2xs rounded-xl">
-      <div className='flex items-center justify-between p-4 text-gray-700'>
+    <div className="p-4 bg-white border border-gray-200 shadow-2xs rounded-xl w-full h-[600px]">
+      <div className='flex items-center justify-between p-4 text-gray-700 w-full'>
         {/* select */}
         <div className="relative inline-block text-sm">
           <ConfigProvider theme={{
@@ -95,7 +114,7 @@ const ExpensePieChart = ({ defaultIndex }) => {
                 { value: 'total', label: 'total' }
               ]}
               defaultValue={'month'}
-              onChange={value => setDateType(value)}> 
+              onChange={(value) => handleTypeChange(value)}> 
             </Select>
           </ConfigProvider>
         </div>
@@ -107,61 +126,62 @@ const ExpensePieChart = ({ defaultIndex }) => {
         </div>
       </div>
 
-      <div className='w-full h-[450px]'>
-        {/* expense chart  */}
-        {data && data.length >= 0 ? (
-          <div>
-            {type === 'EXPENSE' && <PieChart 
-              style={{ width: '100%', height: '100%', maxWidth: '500px', maxHeight: '80vh', aspectRatio: 1, boxShadow: '5px' }}
-              responsive
-              key="data.length"
-            >
-              <Pie
-                data={data}
-                nameKey='name'
-                dataKey="value"
-                cx="50%"
-                cy="50%"
-                outerRadius="60%"
-                label={({ name, percent }) => {
-                  const shortName = name.length > 4 ? `${name.slice(0, 4)}...` : name
-                  return `${shortName}: ${(percent * 100).toFixed(0)}%`
-                }}
-              >
-                {data.map((entry, index) => (
-                  <Cell key={index} fill={getColor(entry.name)} />
-                ))}
-              </Pie>
-              <Legend  layout='horizontal' verticalAlign='bottom' align='center' formatter={(value) => <span>{value}</span> } />
-            </PieChart>}
+      {/* pie chart  */}
+      <div className='w-full '>
+        {(data && data.length > 0) && (
+          <ResponsiveContainer width="100%" height={450}>
+            <PieChart key={data.length}>
+              {/* expense chart */}
+              {type === 'EXPENSE' && 
+                <Pie
+                  data={data}
+                  nameKey='name'
+                  dataKey="value"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius="60%"
+                  label={({ _, percent }) => {
+                    return `${(percent * 100).toFixed(0)}%`
+                  }}
+                >
+                  {data.map((entry, index) => (
+                    <Cell key={index} fill={getColor(entry.name)} />
+                  ))}
+                </Pie>
+              }
 
-            {/* income chart */}
-            {type === 'INCOME' && <PieChart 
-              style={{ width: '100%', height: '100%', maxWidth: '500px', maxHeight: '80vh', aspectRatio: 1 }}
-              responsive
-              key='data.length'
-            >
-              <Pie
+              {/* income chart */}
+              {type === 'INCOME' && <Pie
                 data={data}
                 dataKey="value"
                 cx="50%"
                 cy="50%"
                 outerRadius="60%"
-                label={({ name, percent }) => {
-                  const shortName = name.length > 4 ? `${name.slice(0, 4)}...` : name
-                  return `${shortName}: ${(percent * 100).toFixed(0)}%`
+                label={({ _, percent }) => {
+                  return `${(percent * 100).toFixed(0)}%`
                 }}
               >
                 {data.map((entry, index) => (
                   <Cell key={index} fill={getColor(entry.name)} />
                 ))} 
               </Pie>
+              }
+              
+              <Tooltip cursor={false} content={<CustomeTooltip />}></Tooltip>
               <Legend  layout='horizontal' verticalAlign='bottom' align='center' formatter={(value) => <span>{value}</span> } />
-            </PieChart>}
-          </div>
-        ) : (<div>loading...</div>)}
+            </PieChart>
+          </ResponsiveContainer>
+        )}
+        {(!data || data.length === 0) && (
+            <div className='w-full h-[450px] relative justify-center items-center'>
+              <div className="w-65 h-65 rounded-full bg-gray-50 flex items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                <span className="text-gray-400 font-medium">No data yet...</span>
+              </div>
+            </div>
+          )}
       </div>
 
+      {/* exp / inc */}
       <div className='text-center justify-center m-4'>
         <Segmented 
           size='small'
@@ -174,4 +194,4 @@ const ExpensePieChart = ({ defaultIndex }) => {
     </div>
   )
 }
-export default ExpensePieChart
+export default MyPieChart
