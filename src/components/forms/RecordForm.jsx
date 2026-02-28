@@ -66,18 +66,20 @@ const RecordCreateForm = ({showRecordForm, setShowRecordForm, mode, recordId}) =
 
   const handleSubmit = async (event) => {
     event.preventDefault()
+    console.log(formData.category)
     const payload = {
       title: formData.title,
       amount: formData.type === 'EXPENSE' ? -Math.abs(formData.amount) : Math.abs(formData.amount),
       description: formData.description,
       ticketCompletionDate: formData.date + 'T00:00:00',
       transactionType: formData.type.toUpperCase(),
-      transactionCategory: formData.category ? formData.category.toUpperCase() : categories[0].name.toUpperCase(),
+      transactionCategory: formData.category ? formData.category.toUpperCase() : formData.type === 'Expense' ? categories[0].name.toUpperCase() : categories[7].name.toUpperCase(),
       transactionStatus: formData.status.toUpperCase(),
       account: {
         id: formData.accountId ? formData.accountId : accounts[0].id,
       }
     }
+    console.log(payload)
     try {
       const response = mode === 'create' ? 
           await recordsService.createRecord(payload) : 
@@ -104,7 +106,8 @@ const RecordCreateForm = ({showRecordForm, setShowRecordForm, mode, recordId}) =
   const handleTypeChange = (type) => {
     setFormData({
       ...formData, 
-      type: type
+      type: type,
+      category: type === 'Expense' ? 'Food_drink' : 'Salary'
     })
   }
 
