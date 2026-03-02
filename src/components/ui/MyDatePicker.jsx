@@ -4,13 +4,8 @@ import dayjs from 'dayjs'
 const { RangePicker } = DatePicker
 
 const MyDatePicker = ({ mode, onChange }) => {
-  const handleChange = (_, dateString) => {
+  const handleChange = (date, dateString) => {
     onChange(dateString)
-    console.log(dateString)
-  }
-
-  const handleRangeChange = (_, dateStrings) => {
-    onChange(dateStrings)
   }
 
   return (
@@ -45,12 +40,12 @@ const MyDatePicker = ({ mode, onChange }) => {
           onChange={handleChange}
         />}
 
-        {/* year range picker */}
-        {mode === 'yearRange' && <RangePicker
-          defaultValue={[dayjs().subtract(1, 'year'), dayjs()]}
-          picker='year'
+        {/* month range picker */}
+        {mode === 'monthRange' && <RangePicker
+          defaultValue={[dayjs().startOf('year'), dayjs().endOf('year')]}
+          picker='month'
           style={{width: '200px'}}
-          onChange={handleRangeChange}
+          onChange={handleChange}
         />}
       </div>
     </ConfigProvider>

@@ -22,7 +22,7 @@ const getData = async (startDate, endDate) => {
  *  startDate
  *  endDate
  * **/
-const getDataByCat = async (type, startDate, endDate) => {
+const getDataByCatAndType = async (type, startDate, endDate) => {
   const response = await axios.get(`${baseUrl}/category`, {
     params: {
       type,
@@ -34,4 +34,4 @@ const getDataByCat = async (type, startDate, endDate) => {
   return response
 }
 
-export default { getData, getDataByCat }
+export default { getData, getDataByCatAndType }

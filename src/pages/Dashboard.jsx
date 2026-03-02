@@ -1,15 +1,11 @@
 import { useState } from 'react'
 import { userAuth } from '../services/utils/userAuth'
-import MyDatePicker from '../components/ui/MyDatePicker'
 import MyPieChart from '../components/charts/MyPieChart'
 import MyBarChart from '../components/charts/MyBarChart'
+import OverviewChart from '../components/charts/OverviewChart'
 
 const Dashboard = () => {
   const { user } = userAuth()
-
-  const onDatePickerChange = () => {
-
-  }
 
   // we do not show anything without user information
   if (!user) return null
@@ -17,7 +13,7 @@ const Dashboard = () => {
   return (
     <div className="w-full min-h-screen bg-gray-100">
       {/* KPI cards */}
-      <div className="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
+      <div className="max-w-[85rem] px-4 pt-10 sm:px-6 lg:px-8 lg:pt-14 mx-auto">
         <div className="grid md:grid-cols-4 bg-white border border-gray-200 shadow-2xs rounded-xl overflow-hidden">
           <a className="block p-4 md:p-5 relative bg-white hover:bg-gray-100 focus:outline-hidden before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:h-full before:border-s before:border-gray-200 first:before:bg-transparent" href="#">
             <div className="flex md:flex flex-col lg:flex-row gap-y-3 gap-x-5">
@@ -131,22 +127,15 @@ const Dashboard = () => {
 
       {/* charts */}
       <div>
-        {/* summary chart */}
-        <div>
-          <div className="flex justify-between items-center mt-2 p-4 md:p-5 min-h-102.5 flex-col">
-            <div className="p-4 bg-white border border-gray-200 shadow-2xs rounded-xl">
-              {/* date picker */}
-                <div className='flex justify-end p-4'><MyDatePicker mode='yearRange' onChange={onDatePickerChange}/></div>
-                chart 3 总复盘图：收入支出综合占比图，横轴月份，总轴金额，可按年份筛选range
-            </div>
-          </div>
-        </div>
-
         {/* pie chart,  */}
         <div className="flex justify-between items-center mt-2 grid grid-cols-2 gap-2 p-4 md:p-5 min-h-102.5 flex-col w-full h-[600px]">
           <MyPieChart />
           {/* bar chart */}
           <MyBarChart />
+        </div>
+        {/* summary chart */}
+        <div className="flex justify-between items-center mt-2 p-4 md:p-5 min-h-102.5 flex-col">
+          <OverviewChart />
         </div>
       </div>
 
@@ -154,7 +143,6 @@ const Dashboard = () => {
       <div>
 
       </div>
-
     </div>
   )
 }

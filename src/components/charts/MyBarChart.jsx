@@ -25,14 +25,13 @@ const MyBarChart = () => {
   const getData = async () => {
     setData([])
     try {
-      const response = await dashboardService.getDataByCat('EXPENSE', date.startDate, date.endDate)
+      const response = await dashboardService.getDataByCatAndType('EXPENSE', date.startDate, date.endDate)
       if (response.status === 200) {
         if (response.data.length > 0) {
           const data = response.data.map(i => ({
             name: i.name.charAt(0) + i.name.slice(1).toLowerCase(),
             value: Math.abs(i.value)
           }))
-          console.log(data)
           setData(data)
         } 
       }
@@ -44,7 +43,6 @@ const MyBarChart = () => {
   const CustomeTooltip = ({active, payload}) => {
     if (active && payload && payload.length) {
       const { name, value } = payload[0].payload
-      console.log(payload)
       return (
         <div className='bg-white/80 backdrop-blur-md p-4 border border-gray-50 shadow-sm rounded-xl '>
           <p className='text-sm font-bold text-gray-600 flex items-center gap-2'>

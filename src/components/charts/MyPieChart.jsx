@@ -42,7 +42,7 @@ const MyPieChart = () => {
   const getData = async () => {
     setData([])
     try {
-      const response = await dashboardService.getDataByCat(type, date.startDate, date.endDate)
+      const response = await dashboardService.getDataByCatAndType(type, date.startDate, date.endDate)
       if (response.status === 200) {
         if (response.data.length > 0) {
           const data = response.data.map(i => ({
@@ -78,7 +78,6 @@ const MyPieChart = () => {
       const { name, value } = payload[0].payload
       const totalAmount = data.reduce((sum, item) => sum + item.value, 0)
       const percent = totalAmount > 0 ? (value / totalAmount) : 0
-      console.log(payload)
       return (
         <div className='bg-white/80 backdrop-blur-md p-4 border border-gray-50 shadow-sm rounded-xl '>
           <p className='text-sm font-bold text-gray-600 flex items-center gap-2'>
@@ -139,7 +138,7 @@ const MyPieChart = () => {
                   dataKey="value"
                   cx="50%"
                   cy="50%"
-                  outerRadius="60%"
+                  outerRadius="70%"
                   label={({ _, percent }) => {
                     return `${(percent * 100).toFixed(0)}%`
                   }}
@@ -156,7 +155,7 @@ const MyPieChart = () => {
                 dataKey="value"
                 cx="50%"
                 cy="50%"
-                outerRadius="60%"
+                outerRadius="70%"
                 label={({ _, percent }) => {
                   return `${(percent * 100).toFixed(0)}%`
                 }}
@@ -174,7 +173,7 @@ const MyPieChart = () => {
         )}
         {(!data || data.length === 0) && (
             <div className='w-full h-[450px] relative justify-center items-center'>
-              <div className="w-65 h-65 rounded-full bg-gray-50 flex items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+              <div className="w-75 h-75 rounded-full bg-gray-50 flex items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                 <span className="text-gray-400 font-medium">No data yet...</span>
               </div>
             </div>
