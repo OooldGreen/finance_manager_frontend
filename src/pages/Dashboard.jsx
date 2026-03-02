@@ -1,102 +1,114 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { userAuth } from '../services/utils/userAuth'
+import { UpIcon, DownIcon } from '../components/ui/Icon'
 import MyPieChart from '../components/charts/MyPieChart'
 import MyBarChart from '../components/charts/MyBarChart'
 import OverviewChart from '../components/charts/OverviewChart'
+import dashboardService from '../services/dashboard'
 
 const Dashboard = () => {
   const { user } = userAuth()
+  const [kpiData, setKpiDate] = useState()
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    getData()
+  }, [])
+
+  const getData = async () => {
+    try {
+      const response = await dashboardService.getKpiData()
+      const data = response.data
+      setKpiDate({
+        balance: data.monthlyBalance,
+        remaining: data.monthlyRemaining,
+        savingRate: data.savingRate,
+        topExpense: data.topExpense
+      })
+      setLoading(false)
+    } catch (err) {
+      console.log('Fail to get kpi data', err)
+    }
+  }
 
   // we do not show anything without user information
   if (!user) return null
+  if (loading) return ( <div>loading...</div> )
 
   return (
     <div className="w-full min-h-screen bg-gray-100">
       {/* KPI cards */}
       <div className="max-w-[85rem] px-4 pt-10 sm:px-6 lg:px-8 lg:pt-14 mx-auto">
         <div className="grid md:grid-cols-4 bg-white border border-gray-200 shadow-2xs rounded-xl overflow-hidden">
-          <a className="block p-4 md:p-5 relative bg-white hover:bg-gray-100 focus:outline-hidden before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:h-full before:border-s before:border-gray-200 first:before:bg-transparent" href="#">
+          <div className="block p-4 md:p-5 relative bg-white hover:bg-gray-100 focus:outline-hidden before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:h-full before:border-s before:border-gray-200 first:before:bg-transparent" href="#">
             <div className="flex md:flex flex-col lg:flex-row gap-y-3 gap-x-5">
-
               <div className="grow">
                 <p className="text-xs uppercase font-medium text-foreground">
-                  Monthly Balance
+                  Balance
                 </p>
                 <h3 className="mt-1 text-xl sm:text-2xl font-semibold text-primary">
-                  72,540
+                  {kpiData.balance.current >= 0 ? `€${kpiData.balance.current}` : `-€${Math.abs(kpiData.balance.current)}`}
                 </h3>
                 <div className="mt-1 flex justify-between items-center">
                   <p className="text-sm text-muted-foreground-1">
-                    from <span className="font-semibold text-foreground">70,104</span>
+                    last month <span className="font-semibold text-foreground">{kpiData.balance.previous >= 0 ? `€${kpiData.balance.previous}` : `-€${Math.abs(kpiData.balance.current)}`}</span>
                   </p>
                   <span className="ms-1 inline-flex items-center gap-1.5 py-1 px-2 rounded-md text-xs font-medium bg-surface-1 text-surface-foreground">
-                    <svg className="inline-block size-3 self-center" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                      <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                    </svg>
-                    <span className="inline-block">
-                      12.5%
+                    {kpiData.balance.mom  >= 0 && <UpIcon className='inline-block size-3 self-center text-rose-600'/>}
+                    {kpiData.balance.mom  < 0 && <DownIcon className="inline-block size-3 self-center text-emerald-600"/>}
+                    <span className={`inline-block ${kpiData.balance.mom >= 0 ? 'text-rose-600' : 'text-emerald-600'}`}>
+                      {Math.abs(kpiData.balance.mom)} %
                     </span>
                   </span>
                 </div>
               </div>
             </div>
-          </a>
+          </div>
 
-          <a className="block p-4 md:p-5 relative bg-white hover:bg-gray-100 focus:outline-hidden focus:bg-layer-focus before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:h-full before:border-s before:border-gray-200 first:before:bg-transparent" href="#">
+          <div className="block p-4 md:p-5 relative bg-white hover:bg-gray-100 focus:outline-hidden focus:bg-layer-focus before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:h-full before:border-s before:border-gray-200 first:before:bg-transparent" href="#">
             <div className="flex md:flex flex-col lg:flex-row gap-y-3 gap-x-5">
-
               <div className="grow">
                 <p className="text-xs uppercase font-medium text-foreground">
-                  MoM Growth
+                  Remaining
                 </p>
                 <h3 className="mt-1 text-xl sm:text-2xl font-semibold text-primary">
                   29.4%
                 </h3>
                 <div className="mt-1 flex justify-between items-center">
                   <p className="text-sm text-muted-foreground-1">
-                    from <span className="font-semibold text-foreground">29.1%</span>
+                    <span className="font-semibold text-foreground">29.1%</span> left
                   </p>
-                  <span className="ms-1 inline-flex items-center gap-1.5 py-1 px-2 rounded-md text-xs font-medium bg-surface-1 text-surface-foreground">
-                    <svg className="inline-block size-3 self-center" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                      <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                    </svg>
-                    <span className="inline-block">
-                      1.7%
-                    </span>
-                  </span>
                 </div>
               </div>
             </div>
-          </a>
+          </div>
 
-          <a className="block p-4 md:p-5 relative bg-white  hover:bg-gray-100 focus:outline-hidden focus:bg-layer-focus before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:h-full before:border-s before:border-gray-200 first:before:bg-transparent" href="#">
+          <div className="block p-4 md:p-5 relative bg-white  hover:bg-gray-100 focus:outline-hidden focus:bg-layer-focus before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:h-full before:border-s before:border-gray-200 first:before:bg-transparent" href="#">
             <div className="flex md:flex flex-col lg:flex-row gap-y-3 gap-x-5">
-
               <div className="grow">
                 <p className="text-xs uppercase font-medium text-foreground">
-                  Top Expense Category
+                  Top Expense
                 </p>
                 <h3 className="mt-1 text-xl sm:text-2xl font-semibold text-primary">
-                  56.8%
+                  {kpiData.topExpense.current >= 0 ? `€${kpiData.topExpense.current}` : `-€${Math.abs(kpiData.topExpense.current)}`}
                 </h3>
                 <div className="mt-1 flex justify-between items-center">
                   <p className="text-sm text-muted-foreground-1">
-                    from <span className="font-semibold text-foreground">61.2%</span>
+                    last month <span className="font-semibold text-foreground">{kpiData.topExpense.previous >= 0 ? `€${kpiData.topExpense.previous}` : `-€${Math.abs(kpiData.topExpense.current)}`}</span>
                   </p>
                   <span className="ms-1 inline-flex items-center gap-1.5 py-1 px-2 rounded-md text-xs font-medium bg-surface-1 text-surface-foreground">
-                    <svg className="inline-block size-3 self-center" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                      <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                    </svg>
-                    <span className="inline-block">
-                      4.4%
+                    {kpiData.topExpense.mom  >= 0 && <UpIcon className='inline-block size-3 self-center text-rose-600'/>}
+                    {kpiData.topExpense.mom  < 0 && <DownIcon className="inline-block size-3 self-center text-emerald-600"/>}
+                    <span className={`inline-block ${kpiData.balance.mom >= 0 ? 'text-rose-600' : 'text-emerald-600'}`}>
+                      {Math.abs(kpiData.topExpense.mom)} %
                     </span>
                   </span>
                 </div>
               </div>
             </div>
-          </a>
+          </div>
 
-          <a className="block p-4 md:p-5 relative bg-white  hover:bg-gray-100 focus:outline-hidden focus:bg-layer-focus before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:h-full before:border-s before:border-gray-200 first:before:bg-transparent" href="#">
+          <div className="block p-4 md:p-5 relative bg-white  hover:bg-gray-100 focus:outline-hidden focus:bg-layer-focus before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:h-full before:border-s before:border-gray-200 first:before:bg-transparent" href="#">
             <div className="flex md:flex flex-col lg:flex-row gap-y-3 gap-x-5">
 
               <div className="grow">
@@ -104,24 +116,23 @@ const Dashboard = () => {
                   Savings Rate
                 </p>
                 <h3 className="mt-1 text-xl sm:text-2xl font-semibold text-primary">
-                  92,913
+                  {kpiData.savingRate.current} %
                 </h3>
                 <div className="mt-1 flex justify-between items-center">
                   <p className="text-sm text-muted-foreground-1">
-                    from <span className="font-semibold text-foreground">94,012</span>
+                    last month <span className="font-semibold text-foreground">{kpiData.savingRate.previous}</span> %
                   </p>
                   <span className="ms-1 inline-flex items-center gap-1.5 py-1 px-2 rounded-md text-xs font-medium bg-surface-1 text-surface-foreground">
-                    <svg className="inline-block size-3 self-center" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                      <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                    </svg>
-                    <span className="inline-block">
-                      0.1%
+                    {kpiData.savingRate.mom  >= 0 && <UpIcon className='inline-block size-3 self-center text-rose-600'/>}
+                    {kpiData.savingRate.mom  < 0 && <DownIcon className="inline-block size-3 self-center text-emerald-600"/>}
+                    <span className={`inline-block ${kpiData.balance.mom >= 0 ? 'text-rose-600' : 'text-emerald-600'}`}>
+                      {Math.abs(kpiData.savingRate.mom)} %
                     </span>
                   </span>
                 </div>
               </div>
             </div>
-          </a>
+          </div>
         </div>
       </div>
 

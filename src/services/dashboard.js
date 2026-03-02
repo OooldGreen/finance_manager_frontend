@@ -34,4 +34,9 @@ const getDataByCatAndType = async (type, startDate, endDate) => {
   return response
 }
 
-export default { getData, getDataByCatAndType }
+const getKpiData = async () => {
+  const response  = await axios.get(`${baseUrl}/kpi`, getConfig())
+  return response
+}
+
+export default { getData, getDataByCatAndType, getKpiData }
