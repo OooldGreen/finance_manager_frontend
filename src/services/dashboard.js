@@ -39,4 +39,14 @@ const getKpiData = async () => {
   return response
 }
 
-export default { getData, getDataByCatAndType, getKpiData }
+const getHeatmapData = async (year) => {
+  const response = await axios.get(`${baseUrl}/heatmap`, {
+    params: {
+      year: year
+    },
+    ...getConfig()
+  })
+  return response
+}
+
+export default { getData, getDataByCatAndType, getKpiData, getHeatmapData }

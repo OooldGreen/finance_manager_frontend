@@ -1,4 +1,7 @@
 import { useState, useEffect } from 'react'
+import Tooltip from '@uiw/react-tooltip'
+import HeatMap from '@uiw/react-heat-map'
+import { Segmented, ConfigProvider } from 'antd'
 import { userAuth } from '../services/utils/userAuth'
 import { UpIcon, DownIcon } from '../components/ui/Icon'
 import MyPieChart from '../components/charts/MyPieChart'
@@ -10,35 +13,56 @@ const Dashboard = () => {
   const { user } = userAuth()
   const [kpiData, setKpiDate] = useState()
   const [loading, setLoading] = useState(true)
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
+  const [heatmapData, setHeatmapData] = useState([])
+  const years = Array.from({length: 20}, (_, i) => new Date().getFullYear() - i)
 
   useEffect(() => {
     getData()
   }, [])
 
+  useEffect(() => {
+    getHeatmapData()
+  }, [selectedYear])
+
   const getData = async () => {
     try {
+      getHeatmapData()
       const response = await dashboardService.getKpiData()
-      const data = response.data
-      setKpiDate({
-        balance: data.monthlyBalance,
-        remaining: data.monthlyRemaining,
-        savingRate: data.savingRate,
-        topExpense: data.topExpense
-      })
-      setLoading(false)
+      if (response.status === 200) {
+        const data = response.data
+        setKpiDate({
+          balance: data.monthlyBalance,
+          remaining: data.monthlyRemaining,
+          savingRate: data.savingRate,
+          topExpense: data.topExpense
+        })
+        setLoading(false)
+      }
     } catch (err) {
       console.log('Fail to get kpi data', err)
     }
   }
 
+  const getHeatmapData = async () => {
+    try {
+      const response = await dashboardService.getHeatmapData(selectedYear)
+      if (response.status === 200) {
+        setHeatmapData(response.data)
+      }
+    } catch (err) {
+      console.log('Fail to get heatmap data', err)
+    }
+  }
+
   // we do not show anything without user information
-  if (!user) return null
+  if (!user || !years || years.length === 0) return null
   if (loading) return ( <div>loading...</div> )
 
   return (
     <div className="w-full min-h-screen bg-gray-100">
       {/* KPI cards */}
-      <div className="max-w-[85rem] px-4 pt-10 sm:px-6 lg:px-8 lg:pt-14 mx-auto">
+      <div className="px-5 pt-10 lg:pt-14 mx-auto">
         <div className="grid md:grid-cols-4 bg-white border border-gray-200 shadow-2xs rounded-xl overflow-hidden">
           <div className="block p-4 md:p-5 relative bg-white hover:bg-gray-100 focus:outline-hidden before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:h-full before:border-s before:border-gray-200 first:before:bg-transparent" href="#">
             <div className="flex md:flex flex-col lg:flex-row gap-y-3 gap-x-5">
@@ -151,8 +175,98 @@ const Dashboard = () => {
       </div>
 
       {/* heatmap */}
-      <div>
+      <div className='w-full px-5 min-h-50 h-70'>
+        <div className='flex w-full p-5 bg-white h-60 shadow-2xs rounded-xl border border-gray-200 justify-between'>
+          <div className='flex border border-gray-200 justify-start items-center p-2 rounded-sm bg-white text-center justify-center overflow-x-auto [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-200 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500'>
+            <div>
+              <HeatMap
+                value={heatmapData}
+                width={900}
+                style={{ color: '#000000'}}
+                weekLabels={['', 'Mon', '', 'Wed', '', 'Fri', '']}
+                startDate={new Date(`${selectedYear}/01/01`)}
+                endDate={new Date(`${selectedYear}/12/31`)}
+                rectSize={14}
+                panelColors={{
+                  0: '#ebedf0', 
+                  3: '#9be9a8', 
+                  5: '#40c463', 
+                  10: '#30a14e',
+                  20: '#216e39', 
+                }}
+                rectProps={{ rx:2, 'data-tooptip-id': 'heatmap-tooltip' }}
+                rectRender={(props, data) => {
+                  return (
+                    <rect {...props} data-tooltip-content={`records count : ${data.count || 0}`} /> 
+                  )
+                }}
+                legendRender={() => null}
+              />
 
+              <Tooltip 
+                placement="top"
+                id="heatmap-tooltip"
+                style={{ 
+                  backgroundColor: "#1f2937",
+                  color: "#fff",
+                  borderRadius: "8px",
+                  fontSize: "12px",
+                  zIndex: 50
+                }}
+              />
+
+              <div className='flex w-full justify-end items-center gap-1.5 text-gray-400 text-xs pr-20'>
+                <span>Less</span>
+                <div className="flex gap-1">
+                  {[
+                    '#ebedf0', // 0 笔
+                    '#9be9a8', // 少
+                    '#40c463', // 中
+                    '#30a14e', // 多
+                    '#216e39'  // 极多
+                  ].map((color, index) => (
+                    <div 
+                      key={index}
+                      style={{ backgroundColor: color }}
+                      className="w-[12px] h-[12px] rounded-[2px] border border-black/5"
+                    />
+                  ))}
+                </div>
+                <span>More</span>
+              </div>
+            </div>
+          </div>
+
+          <div className='hidden md:flex flex-col xl:visible shrink-0"'>
+            <ConfigProvider
+              theme={{
+                components: {
+                  Segmented: {
+                    itemSelectedBg: 'oklch(54.6% 0.245 262.881)',
+                    itemSelectedColor: '#fff',
+                    itemHoverBg: 'oklch(92.8% 0.006 264.531)',
+                    trackBg: 'transparent',
+                    trackPadding: 2,
+                    controlHeight: 40,
+                    controlPaddingHorizontal: 60
+                  },
+                },
+              }}
+            >
+              <div className='h-[198px] pl-2 overflow-y-auto scrollbar-hide rounded-lg'>
+                <Segmented
+                  orientation="vertical"
+                  options={years}
+                  onChange={(value) => setSelectedYear(value)}
+                  style={{
+                    fontSize: '12px',
+                  }}
+                  block
+                />
+              </div>
+            </ConfigProvider>
+          </div>
+        </div>
       </div>
     </div>
   )
