@@ -67,9 +67,6 @@ const Profile = () => {
     <>
       {/* button */}
       <div className="mt-5 flex justify-end gap-x-2">
-        <button onClick={handleCancel} className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-hidden focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
-          Cancel
-        </button>
         <button type="submit" className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white  hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
           Save
         </button>
@@ -78,9 +75,9 @@ const Profile = () => {
   )
   
   return (
-    <div>
-      <div id="hs-profile-modal" className="hs-overlay size-full fixed top-0 start-0 z-80 overflow-x-hidden overflow-y-auto pointer-events-none bg-neutral-900/50" role="dialog" tabIndex="-1">
-        <div className="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 ease-out transition-all sm:max-w-lg sm:w-full sm:mx-auto mt-10">
+    <div className="z-9999">
+      <div className="size-full fixed top-0 start-0 overflow-x-hidden overflow-y-auto pointer-events-none bg-neutral-900/50 z-80" role="dialog" tabIndex="-1">
+        <div className="ease-out transition-all sm:max-w-lg sm:w-full sm:mx-auto mt-10">
           <div className="relative flex flex-col bg-white shadow-lg rounded-xl pointer-events-auto dark:bg-neutral-800">
             <div className="relative overflow-hidden min-h-32 bg-gray-900 text-center rounded-t-xl dark:bg-neutral-950">
               <div className="absolute top-2 end-2">

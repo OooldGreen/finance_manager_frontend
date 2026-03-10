@@ -34,7 +34,7 @@ const Settings= () => {
     return (
       <div>
         <div className="flex items-center hs-overlay size-full fixed top-0 start-0 z-80 overflow-x-hidden overflow-y-auto bg-neutral-900/50">
-          <div className="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 ease-out transition-all md:max-w-2xl md:w-full m-3 md:mx-auto">
+          <div className="mt-0 ease-out transition-all md:max-w-2xl md:w-full m-3 md:mx-auto">
             <div className="relative flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl overflow-hidden dark:bg-neutral-900 dark:border-neutral-800">
               <div className="p-4 sm:p-10 overflow-y-auto">
                 <div className="flex gap-x-4 md:gap-x-7">

@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react'
+import dayjs from 'dayjs'
 import Tooltip from '@uiw/react-tooltip'
 import HeatMap from '@uiw/react-heat-map'
-import { Segmented, ConfigProvider } from 'antd'
+import { Segmented, ConfigProvider, Flex, Progress } from 'antd'
 import { userAuth } from '../services/utils/userAuth'
 import { UpIcon, DownIcon } from '../components/ui/Icon'
 import MyPieChart from '../components/charts/MyPieChart'
 import MyBarChart from '../components/charts/MyBarChart'
 import OverviewChart from '../components/charts/OverviewChart'
+import BudgetForm from '../components/forms/BudgetForm'
 import dashboardService from '../services/dashboard'
+import budgetsService from '../services/budgets'
 
 const Dashboard = () => {
   const { user } = userAuth()
@@ -16,6 +19,9 @@ const Dashboard = () => {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
   const [heatmapData, setHeatmapData] = useState([])
   const years = Array.from({length: 20}, (_, i) => new Date().getFullYear() - i)
+
+  const [budget, setBudget] = useState({total: 0, expense: 0, pending: 0})
+  const [showBudgetForm, setShowBudgetForm] = useState(false)
 
   useEffect(() => {
     getData()
@@ -28,19 +34,29 @@ const Dashboard = () => {
   const getData = async () => {
     try {
       getHeatmapData()
-      const response = await dashboardService.getKpiData()
-      if (response.status === 200) {
-        const data = response.data
+      const [kpiResponse, budgetResponse] = await Promise.all([
+        dashboardService.getKpiData(),
+        budgetsService.getBudgetByMonth(dayjs().year(), dayjs().month() + 1)
+      ])
+      if (kpiResponse.status === 200) {
+        const data = kpiResponse.data
         setKpiDate({
           balance: data.monthlyBalance,
           remaining: data.monthlyRemaining,
           savingRate: data.savingRate,
           topExpense: data.topExpense
         })
-        setLoading(false)
+      }
+      if (budgetResponse.status === 200) {
+        const data = budgetResponse.data
+        setBudget({ total: data.totalBudget, expense: data.totalExpense, pending: data.totalPending })
+        console.log(data.totalPending)
       }
     } catch (err) {
       console.log('Fail to get kpi data', err)
+      setBudget({total: 0, expense: 0, pending: 0})
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -60,11 +76,12 @@ const Dashboard = () => {
   if (loading) return ( <div>loading...</div> )
 
   return (
-    <div className="w-full min-h-screen bg-gray-100">
-      {/* KPI cards */}
-      <div className="px-5 pt-10 lg:pt-14 mx-auto">
-        <div className="grid md:grid-cols-4 bg-white border border-gray-200 shadow-2xs rounded-xl overflow-hidden">
-          <div className="block p-4 md:p-5 relative bg-white hover:bg-gray-100 focus:outline-hidden before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:h-full before:border-s before:border-gray-200 first:before:bg-transparent" href="#">
+    <div className="w-full min-h-screen bg-gray-100 z-0">
+      
+      <div className="px-5 pt-5 lg:pt-8 mx-auto grid md:grid-cols-4 gao-4 w-full items-stretch gap-2 z-0">
+        {/* KPI cards */}
+        <div className="grid md:col-span-3 grid-cols-1 sm:grid-cols-3 bg-white border border-gray-200 shadow-2xs rounded-xl overflow-hidden">
+          <div className="block p-4 md:p-5 relative bg-white flex flex-col justify-center hover:bg-gray-50 focus:outline-hidden before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:h-full before:border-s before:border-gray-200 first:before:bg-transparent" href="#">
             <div className="flex md:flex flex-col lg:flex-row gap-y-3 gap-x-5">
               <div className="grow">
                 <p className="text-xs uppercase font-medium text-foreground">
@@ -89,7 +106,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="block p-4 md:p-5 relative bg-white hover:bg-gray-100 focus:outline-hidden focus:bg-layer-focus before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:h-full before:border-s before:border-gray-200 first:before:bg-transparent" href="#">
+          {/* <div className="block p-4 md:p-5 relative bg-white hover:bg-gray-100 focus:outline-hidden focus:bg-layer-focus before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:h-full before:border-s before:border-gray-200 first:before:bg-transparent" href="#">
             <div className="flex md:flex flex-col lg:flex-row gap-y-3 gap-x-5">
               <div className="grow">
                 <p className="text-xs uppercase font-medium text-foreground">
@@ -105,9 +122,9 @@ const Dashboard = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
 
-          <div className="block p-4 md:p-5 relative bg-white  hover:bg-gray-100 focus:outline-hidden focus:bg-layer-focus before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:h-full before:border-s before:border-gray-200 first:before:bg-transparent" href="#">
+          <div className="block p-4 md:p-5 relative bg-white flex flex-col justify-center hover:bg-gray-50 focus:outline-hidden focus:bg-layer-focus before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:h-full before:border-s before:border-gray-200 first:before:bg-transparent" href="#">
             <div className="flex md:flex flex-col lg:flex-row gap-y-3 gap-x-5">
               <div className="grow">
                 <p className="text-xs uppercase font-medium text-foreground">
@@ -132,7 +149,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="block p-4 md:p-5 relative bg-white  hover:bg-gray-100 focus:outline-hidden focus:bg-layer-focus before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:h-full before:border-s before:border-gray-200 first:before:bg-transparent" href="#">
+          <div className="block p-4 md:p-5 relative bg-white flex flex-col justify-center hover:bg-gray-50 focus:outline-hidden focus:bg-layer-focus before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:h-full before:border-s before:border-gray-200 first:before:bg-transparent" href="#">
             <div className="flex md:flex flex-col lg:flex-row gap-y-3 gap-x-5">
 
               <div className="grow">
@@ -158,12 +175,55 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+
+        {/* budget progress */}
+        <button className='z-0 md:col-span-1 bg-white border border-gray-200 shodow-2xs rounded-xl overflow-hidden flex justify-center hover:bg-gray-50 p-2' onClick={() => setShowBudgetForm(!showBudgetForm)}>
+          <div className='hidden md:block' >
+            <div className="relative size-40 flex items-center justify-center z-0">
+              <Flex gap="default" align="center" vertical>
+              <Progress 
+                percent={budget.total !== 0 ? Number((budget.pending + budget.expense) * 100 / budget.total).toFixed(2) : 0} 
+                type="dashboard"
+                showInfo={false}
+                strokeColor='#ccc'
+                success={{ 
+                  percent: budget.total !== 0 ? Number(budget.expense * 100 / budget.total).toFixed(2) : 0,
+                  strokeColor: '#2563eb'
+                }}
+              />
+            </Flex>
+            <div className='absolute top-1/2 start-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center'>
+              <div className='text-blue-600 text-2xl font-bold'>{budget.total !== 0 ? 100 - Number(budget.expense * 100 / budget.total).toFixed(0) : 100}%</div>
+              <span className='text-sm'>Budget</span>
+            </div>
+            </div>
+          </div>
+          
+          <div className='block md:hidden flex items-center justify-center w-full px-4'>
+            <div className='text-gray-600 pr-2 text-xs font-medium'>BUDGET </div>
+            <Flex vertical className='w-full'>
+              <Tooltip title='Click and view budget detials'>
+                <Progress 
+                  type="line"
+                  percent={budget.total !== 0 ? Number(budget.pending * 100 / budget.total).toFixed(2) : 0} 
+                  showInfo={false}
+                  strokeColor='#ccc'
+                  success={{ 
+                    percent: budget.total !== 0 ? Number(budget.expense * 100 / budget.total).toFixed(2) : 0,
+                    strokeColor: '#2563eb'
+                  }}
+                />
+              </Tooltip>
+            </Flex>
+            <div className='text-blue-600 text-sm pl-2'>{budget.total !== 0 ? 100 - Number(budget.expense * 100 / budget.total).toFixed(0) : 100}%</div>
+            </div>
+        </button>
       </div>
 
       {/* charts */}
       <div>
         {/* pie chart,  */}
-        <div className="flex justify-between items-center mt-2 grid grid-cols-2 gap-2 p-4 md:p-5 min-h-102.5 flex-col w-full h-[600px]">
+        <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2 p-4 md:p-5 min-h-102.5 w-full md:h-[600px]">
           <MyPieChart />
           {/* bar chart */}
           <MyBarChart />
@@ -203,7 +263,7 @@ const Dashboard = () => {
                 legendRender={() => null}
               />
 
-              <Tooltip 
+              {/* <Tooltip 
                 placement="top"
                 id="heatmap-tooltip"
                 style={{ 
@@ -213,7 +273,7 @@ const Dashboard = () => {
                   fontSize: "12px",
                   zIndex: 50
                 }}
-              />
+              /> */}
 
               <div className='flex w-full justify-end items-center gap-1.5 text-gray-400 text-xs pr-20'>
                 <span>Less</span>
@@ -268,6 +328,8 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+
+      {showBudgetForm && <BudgetForm setShowBudgetForm={setShowBudgetForm} showBudgetForm={showBudgetForm} />}
     </div>
   )
 }

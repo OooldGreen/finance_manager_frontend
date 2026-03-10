@@ -13,7 +13,7 @@ import Settings from './pages/Settings'
 import Signout from './pages/Signout'
 import Assets from "./pages/Assets"
 import Records from './pages/Records'
-import Budgets from './pages/Budgets'
+import Wishlist from './pages/Wishlist'
 import AccountDetail from './pages/AccountDetail'
 
 import { AuthProvider } from './components/context/AuthContext'
@@ -45,7 +45,7 @@ function App() {
                 <Route path='/assets/:id' element={<AccountDetail/>}></Route>
                 <Route path='/records' element={<Records/>}></Route>
               </Route>
-              <Route path='/budgets' element={<Budgets/>}></Route>
+              <Route path='/wishlist' element={<Wishlist/>}></Route>
             </Route>
 
             <Route path="*" element={<NotFound/>}></Route>
