@@ -79,7 +79,7 @@ const RecordCreateForm = ({showRecordForm, setShowRecordForm, mode, recordId}) =
         id: formData.accountId ? formData.accountId : accounts[0].id,
       }
     }
-    console.log(payload)
+
     try {
       const response = mode === 'create' ? 
           await recordsService.createRecord(payload) : 
@@ -178,7 +178,7 @@ const RecordCreateForm = ({showRecordForm, setShowRecordForm, mode, recordId}) =
                       onChange={handleChange}
                       value={formData.title}
                       required
-                      className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"></input>
+                      className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6"></input>
                   </div>
                 </div>
 
@@ -197,7 +197,7 @@ const RecordCreateForm = ({showRecordForm, setShowRecordForm, mode, recordId}) =
                           value={formData.amount}
                           onChange={handleChange}
                           required
-                          className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"></input>
+                          className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6"></input>
                       </div>
                     </div>
 
@@ -269,7 +269,7 @@ const RecordCreateForm = ({showRecordForm, setShowRecordForm, mode, recordId}) =
                       name="description"
                       value={formData.description}
                       onChange={handleChange}
-                      className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                      className="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6"
                     ></input>
                     </div>
                 </div>

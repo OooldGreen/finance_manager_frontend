@@ -33,7 +33,6 @@ const RecordList = ({showModifyForm, setShowModifyForm}) => {
   }
 
   const handlePageChange = (newPage) => {
-    console.log('pagechange', totalPages, query)
     if (newPage >= 0 && newPage < totalPages) {
       setQuery({
         ...query,

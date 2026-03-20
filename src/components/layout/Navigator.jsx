@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { userAuth } from '../../services/utils/userAuth'
-import { DashboardIcon, RecordsIcon, AssetsIcon, BudgetsIcon, NotesIcon, TagsIcon, SearchIcon, SettingIcon, ProfileIcon, ExitIcon, UserCircleIcon } from '../ui/Icon'
+import { DashboardIcon, RecordsIcon, AssetsIcon, NotesIcon, TagsIcon, SearchIcon, SettingIcon, ProfileIcon, ExitIcon, UserCircleIcon, GiftIcon } from '../ui/Icon'
 import NavItem from './NavItem'
 
 const Navigator = () => {
@@ -102,13 +102,13 @@ const Navigator = () => {
       <main id="content">
         <div className="md:py-4 bg-white md:border-b border-gray-200 dark:bg-neutral-800 dark:border-neutral-700">
           <nav className="relative max-w-[85rem] w-full mx-auto md:flex md:items-center md:gap-3 px-4 sm:px-6 lg:px-8">
-            <div className="hidden overflow-hidden transition-all duration-300 basis-full grow md:block" aria-labelledby="hs-secondaru-navbar-collapse">
+            <div className="overflow-hidden transition-all duration-300 basis-full grow md:block" aria-labelledby="hs-secondaru-navbar-collapse">
               <div className="overflow-hidden overflow-y-auto max-h-[75vh] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
                 <div className="py-2 md:py-0 flex flex-col md:flex-row md:items-center gap-y-0.5 md:gap-y-0 md:gap-x-6">
                   <NavItem to="/dashboard" icon={DashboardIcon}>Dashboard</NavItem>
                   <NavItem to="/records" icon={RecordsIcon}>Records</NavItem>
                   <NavItem to="/assets" icon={AssetsIcon}>Assets</NavItem>
-                  <NavItem to="/budgets" icon={BudgetsIcon}>Budgets</NavItem>
+                  <NavItem to="/wishlist" icon={GiftIcon}>Wishlist</NavItem>
                   <NavItem to="/notes" icon={NotesIcon}>Notes</NavItem>
                   <NavItem to="/tags" icon={TagsIcon}>Tags</NavItem>
                 </div>

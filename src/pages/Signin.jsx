@@ -46,7 +46,7 @@ const Signin = () => {
                 Username
               </label>
               <div className="mt-2">
-                <input type="text" name="username" onChange={handleChange} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"></input>
+                <input type="text" name="username" onChange={handleChange} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6"></input>
               </div>
             </div>
             <div >
@@ -55,7 +55,7 @@ const Signin = () => {
               </label>
               
               <div className="mt-2">
-                <input type="password" name="password" onChange={handleChange} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"></input>
+                <input type="password" name="password" onChange={handleChange} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6"></input>
               </div>
             </div>
 
@@ -71,7 +71,7 @@ const Signin = () => {
             {/* <!-- End Checkbox --> */}
 
             <div>
-              <button type="submit" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+              <button type="submit" className="flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
                 Sign in
               </button>
             </div>
@@ -81,7 +81,7 @@ const Signin = () => {
 
       <p className="mt-10 text-center text-sm/6 text-gray-500">
         Not a member?{' '}
-        <a href="/signup" className="font-semibold text-indigo-600 hover:text-indigo-500">
+        <a href="/signup" className="font-semibold text-blue-600 hover:text-blue-500">
           Sign up here
         </a>
       </p>

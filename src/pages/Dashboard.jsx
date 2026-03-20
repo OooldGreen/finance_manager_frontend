@@ -50,7 +50,6 @@ const Dashboard = () => {
       if (budgetResponse.status === 200) {
         const data = budgetResponse.data
         setBudget({ total: data.totalBudget, expense: data.totalExpense, pending: data.totalPending })
-        console.log(data.totalPending)
       }
     } catch (err) {
       console.log('Fail to get kpi data', err)
