@@ -109,8 +109,6 @@ const Navigator = () => {
                   <NavItem to="/records" icon={RecordsIcon}>Records</NavItem>
                   <NavItem to="/assets" icon={AssetsIcon}>Assets</NavItem>
                   <NavItem to="/wishlist" icon={GiftIcon}>Wishlist</NavItem>
-                  <NavItem to="/notes" icon={NotesIcon}>Notes</NavItem>
-                  <NavItem to="/tags" icon={TagsIcon}>Tags</NavItem>
                 </div>
               </div>
             </div>

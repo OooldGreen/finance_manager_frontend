@@ -3,6 +3,7 @@ import { Cell, Pie, PieChart, Tooltip, Legend, ResponsiveContainer } from 'recha
 import { ConfigProvider, Select, Segmented } from 'antd'
 import dayjs from 'dayjs'
 import MyDatePicker from '../ui/MyDatePicker'
+import { getColor } from '../../services/utils/colorMap'
 import dashboardService from '../../services/dashboard'
 
 const MyPieChart = () => {
@@ -55,22 +56,6 @@ const MyPieChart = () => {
     } catch (err) {
       console.log('fail to get data by categories', err)
     }
-  }
-
-  const getColor = (name) => {
-    const colorMap = {
-      'Food_drink': '#A8E6CF', 
-      'Shopping': '#FFD3B6',
-      'Transport': '#B39DDB',
-      'Daily': '#FFF176',
-      'Rent': '#FF8A80',
-      'Social': '#81D4FA', 
-      'Subscription': '#DCE775',
-      'Salary': '#4DB6AC',
-      'Investment': '#FFB74D',
-      'Sideline': '#F06292'
-    }
-    return colorMap[name] || '#CFD8DC'
   }
 
   const CustomeTooltip = ({active, payload}) => {

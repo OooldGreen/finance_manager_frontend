@@ -1,9 +1,11 @@
 import { useState, useEffect, useContext } from "react"
 import { toast } from 'react-hot-toast'
+import { Select } from 'antd'
 import { CloseIcon } from "../ui/Icon"
 import RecordContext from "../context/RecordContext"
 import recordsService from '../../services/records'
 import accountsService from "../../services/accounts"
+import tagsService from "../../services/tags"
 
 const RecordCreateForm = ({showRecordForm, setShowRecordForm, mode, recordId}) => {
   const { onSuccess, formatAdapteur } = useContext(RecordContext)
@@ -16,7 +18,8 @@ const RecordCreateForm = ({showRecordForm, setShowRecordForm, mode, recordId}) =
     status: 'PENDING',
     category: '',
     accountId: '',
-    accountName: ''
+    accountName: '',
+    tags: []
   })
 
   const [loading, setLoading] = useState(true)
@@ -26,12 +29,23 @@ const RecordCreateForm = ({showRecordForm, setShowRecordForm, mode, recordId}) =
   const [activeTab, setActiveTab] = useState('EXPENSE')
   const currentCat = categories.filter(category => category.group === activeTab || category.group === 'GENERAL')
 
+  // tags
+  const [frequentTags, setFrequenTags] = useState([])
+
   useEffect(() => {
     const getData =  async() => {
-      const categoriesResponse = await recordsService.getRecordCategories()
-      const accounts = await accountsService.getAllAccounts()
+      if (mode === 'create') {
+        const frequentTags = await tagsService.getFrequentTags(5)
+        setFrequenTags(frequentTags.data)
+      }
+
+      const [categoriesResponse, accounts] = await Promise.all([
+        recordsService.getRecordCategories(),
+        accountsService.getAllAccounts(),
+      ])
       setCategories(categoriesResponse.data)
       setAccounts(accounts.data)
+      
       if (mode === 'modify') {
         getRecord(recordId)
       }
@@ -54,7 +68,8 @@ const RecordCreateForm = ({showRecordForm, setShowRecordForm, mode, recordId}) =
           status: formatAdapteur(recordData.transactionStatus),
           category: formatAdapteur(recordData.transactionCategory),
           accountId: recordData.accountId,
-          accountName: recordData.accountName
+          accountName: recordData.accountName,
+          tags: recordData.tags ? recordData.tags.map(tag => tag.name) : []
         })
         setActiveTab(recordData.transactionType)
       }
@@ -66,7 +81,6 @@ const RecordCreateForm = ({showRecordForm, setShowRecordForm, mode, recordId}) =
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    console.log(formData.category)
     const payload = {
       title: formData.title,
       amount: formData.type === 'EXPENSE' ? -Math.abs(formData.amount) : Math.abs(formData.amount),
@@ -75,9 +89,8 @@ const RecordCreateForm = ({showRecordForm, setShowRecordForm, mode, recordId}) =
       transactionType: formData.type.toUpperCase(),
       transactionCategory: formData.category ? formData.category.toUpperCase() : formData.type === 'Expense' ? categories[0].name.toUpperCase() : categories[7].name.toUpperCase(),
       transactionStatus: formData.status.toUpperCase(),
-      account: {
-        id: formData.accountId ? formData.accountId : accounts[0].id,
-      }
+      accountId: formData.accountId ? formData.accountId : accounts[0].id,
+      tagNames: formData.tags
     }
 
     try {
@@ -109,6 +122,10 @@ const RecordCreateForm = ({showRecordForm, setShowRecordForm, mode, recordId}) =
       type: type,
       category: type === 'Expense' ? 'Food_drink' : 'Salary'
     })
+  }
+
+  const handleTagsChange = (values) => {
+    setFormData({...formData, tags: values})
   }
 
   if(loading) {
@@ -273,6 +290,59 @@ const RecordCreateForm = ({showRecordForm, setShowRecordForm, mode, recordId}) =
                     ></input>
                     </div>
                 </div>
+
+                {/* tags */}
+                <div>
+                  <label className="block text-sm/6 font-medium text-gray-900">Tags</label> 
+                  <div 
+                    style={{
+                      marginTop: '8px',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '6px',
+                      padding: '2px 6px',
+                      outlineOffset: '-1px',
+                      // transition: 'outline 0.2s',
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.outline = '3px solid #145DFC';
+                      e.currentTarget.style.outlineOffset = '-2px';
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.outline = '1px solid #d1d5db';
+                      e.currentTarget.style.outlineOffset = '-1px';
+                    }}
+                  >
+                    <Select
+                      mode="tags"
+                      variant="borderless"
+                      value={formData.tags}
+                      style={{ width: '100%' }}
+                      placeholder="Search or Create"
+                      tokenSeparators={[',', ' ']}
+                      suffixIcon={null}
+                      open={false}
+                      onChange={handleTagsChange}
+                    ></Select>
+                    
+                  </div>
+                  <div className="flex gap-2 mt-2">
+                    {frequentTags.length != 0 && (
+                      frequentTags.map((tag => (
+                        <button 
+                          key={tag.id}
+                          type="button"
+                          className="px-2 py-0.5 text-xs bg-gray-100 hover:bg-blue-100 rounded-sm text-gray-500"
+                          onClick={() => {
+                            if (!formData.tags.includes(tag.name)) {
+                              setFormData({...formData, tags: [...formData.tags, tag.name]})
+                            }
+                          }}
+                        >{tag.name}</button>
+                      )))
+                    )}
+                  </div>
+                </div>
+
                 
                 <div className="flex gap-2">
                   <button onClick={() => { setShowRecordForm(!showRecordForm) }} className="flex w-full justify-center rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm/6 font-semibold shadow-xs hover:bg-gray-100">

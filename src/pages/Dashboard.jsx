@@ -105,24 +105,6 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* <div className="block p-4 md:p-5 relative bg-white hover:bg-gray-100 focus:outline-hidden focus:bg-layer-focus before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:h-full before:border-s before:border-gray-200 first:before:bg-transparent" href="#">
-            <div className="flex md:flex flex-col lg:flex-row gap-y-3 gap-x-5">
-              <div className="grow">
-                <p className="text-xs uppercase font-medium text-foreground">
-                  Remaining
-                </p>
-                <h3 className="mt-1 text-xl sm:text-2xl font-semibold text-primary">
-                  29.4%
-                </h3>
-                <div className="mt-1 flex justify-between items-center">
-                  <p className="text-sm text-muted-foreground-1">
-                    <span className="font-semibold text-foreground">29.1%</span> left
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div> */}
-
           <div className="block p-4 md:p-5 relative bg-white flex flex-col justify-center hover:bg-gray-50 focus:outline-hidden focus:bg-layer-focus before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:h-full before:border-s before:border-gray-200 first:before:bg-transparent" href="#">
             <div className="flex md:flex flex-col lg:flex-row gap-y-3 gap-x-5">
               <div className="grow">
@@ -139,7 +121,7 @@ const Dashboard = () => {
                   <span className="ms-1 inline-flex items-center gap-1.5 py-1 px-2 rounded-md text-xs font-medium bg-surface-1 text-surface-foreground">
                     {kpiData.topExpense.mom  >= 0 && <UpIcon className='inline-block size-3 self-center text-rose-600'/>}
                     {kpiData.topExpense.mom  < 0 && <DownIcon className="inline-block size-3 self-center text-emerald-600"/>}
-                    <span className={`inline-block ${kpiData.balance.mom >= 0 ? 'text-rose-600' : 'text-emerald-600'}`}>
+                    <span className={`inline-block ${kpiData.topExpense.mom >= 0 ? 'text-rose-600' : 'text-emerald-600'}`}>
                       {Math.abs(kpiData.topExpense.mom)} %
                     </span>
                   </span>
@@ -162,13 +144,13 @@ const Dashboard = () => {
                   <p className="text-sm text-muted-foreground-1">
                     last month <span className="font-semibold text-foreground">{kpiData.savingRate.previous}</span> %
                   </p>
-                  <span className="ms-1 inline-flex items-center gap-1.5 py-1 px-2 rounded-md text-xs font-medium bg-surface-1 text-surface-foreground">
+                  <div className="ms-1 inline-flex items-center gap-1.5 py-1 px-2 rounded-md text-xs font-medium bg-surface-1 text-surface-foreground">
                     {kpiData.savingRate.mom  >= 0 && <UpIcon className='inline-block size-3 self-center text-rose-600'/>}
                     {kpiData.savingRate.mom  < 0 && <DownIcon className="inline-block size-3 self-center text-emerald-600"/>}
-                    <span className={`inline-block ${kpiData.balance.mom >= 0 ? 'text-rose-600' : 'text-emerald-600'}`}>
+                    <span className={`inline-block ${kpiData.savingRate.mom >= 0 ? 'text-rose-600' : 'text-emerald-600'}`}>
                       {Math.abs(kpiData.savingRate.mom)} %
                     </span>
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>

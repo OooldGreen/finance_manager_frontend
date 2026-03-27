@@ -51,7 +51,7 @@ export const RecordProvider = ({children}) => {
 
       if (recordsResponse.status === 200) {
         setRecords(data)
-        setTotalPages(recordsResponse.data.totalPages)
+        setTotalPages(recordsResponse.data.page.totalPages)
       }
     } catch (err) {
       console.log('Fail to get records', err)

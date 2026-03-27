@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { BarChart, Legend, XAxis, YAxis, CartesianGrid, Tooltip, Bar, ResponsiveContainer } from 'recharts'
 import dayjs from 'dayjs'
 import MyDatePicker from '../ui/MyDatePicker'
-import dashboardService from '../../services/dashboard'
+import budgetsService from '../../services/budgets'
 
 const MyBarChart = () => {
   const [date, setDate] = useState({
@@ -25,15 +25,17 @@ const MyBarChart = () => {
   const getData = async () => {
     setData([])
     try {
-      const response = await dashboardService.getDataByCatAndType('EXPENSE', date.startDate, date.endDate)
-      if (response.status === 200) {
-        if (response.data.length > 0) {
-          const data = response.data.map(i => ({
-            name: i.name.charAt(0) + i.name.slice(1).toLowerCase(),
-            value: Math.abs(i.value)
-          }))
-          setData(data)
-        } 
+      const budgetRes = await budgetsService.getBudgetByMonth(date.startDate.split('-')[0], date.startDate.split('-')[1])
+      if (budgetRes.status === 200) {
+        if (budgetRes.data != null) {
+          setData(budgetRes.data.categories.map(budget => (
+            {
+              name: budget.categoryName.charAt(0) + budget.categoryName.slice(1).toLowerCase(),
+              spent: budget.spentAmount || 0,
+              limit: budget.limitAmount || 0
+            }
+          )))
+        }
       }
     } catch (err) {
       console.log('fail to get data by categories', err)
@@ -42,12 +44,18 @@ const MyBarChart = () => {
 
   const CustomeTooltip = ({active, payload}) => {
     if (active && payload && payload.length) {
-      const { name, value } = payload[0].payload
+      const { name, spent, limit } = payload[0].payload
       return (
-        <div className='bg-white/80 backdrop-blur-md p-4 border border-gray-50 shadow-sm rounded-xl '>
-          <p className='text-sm font-bold text-gray-600 flex items-center gap-2'>
-            {name}: € {value.toFixed(2)} 
-          </p>
+        <div className='bg-white/80 backdrop-blur-md p-4 border border-gray-50 shadow-sm rounded-xl text-sm'>
+          <p className='pb-1 font-bold text-gray-600 flex items-center gap-2'>{name}</p>
+          <div className='flex items-center gap-2 text-gray-500'>
+            <span className='w-2 h-2 rounded-full' style={{ backgroundColor: '#90daacff'}}></span>
+            budget: € {limit.toFixed(2)}
+          </div>
+          <div className='flex items-center gap-2 text-gray-500'>
+            <span className='w-2 h-2 rounded-full' style={{ backgroundColor: '#9caae8ff'}}></span>
+            spent: € {spent.toFixed(2)}
+          </div>
         </div>
       )
     }
@@ -65,8 +73,8 @@ const MyBarChart = () => {
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis dataKey="name" label={{ value: 'Categories', position: 'insideBottom' }} axisLine={{ stroke: '#E5E7EB' }} height={85} interval={0} tick={{ fontSize: 12, fill: '#9CA3AF', angle: -45, textAnchor: 'end' }}/>
               <YAxis label={{ value: 'Amount (€)', angle: -90, position: 'insideLeft' }} axisLine={false} tick={{ fontSize: 12, fill: '#9CA3AF' }} />
-              <Bar dataKey="value" fill="#9caae8ff" radius={[4, 4, 0, 0]} name="Expenses" />
-              {/* <Bar dataKey="income" nameKey='name' fill="#82ca9d"/> */}
+              <Bar dataKey="limit" fill="#82ca9d" radius={[4, 4, 0, 0]} name='Budgets'/>
+              <Bar dataKey="spent" fill="#9caae8ff" radius={[4, 4, 0, 0]} name="Expenses" />
               <Tooltip content={<CustomeTooltip />} cursor={{ fill: '#f3f4f6', opacity: 0.5 }}/>
               <Legend verticalAlign="bottom" wrapperStyle={{ paddingTop: '20px'}} />
             </BarChart>

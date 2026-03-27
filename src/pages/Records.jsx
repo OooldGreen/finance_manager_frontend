@@ -4,7 +4,6 @@ import RecordList from "../components/forms/RecordList"
 import RecordForm from "../components/forms/RecordForm"
 import RecordContext from "../components/context/RecordContext"
 
-
 const Records = () => {
   const { query, setQuery, loading, monthlyBalance } = useContext(RecordContext)
   

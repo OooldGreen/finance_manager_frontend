@@ -43,8 +43,8 @@ const updatePassword = async (passwords) => {
   return response
 }
 
-const login = async (credentials) => {
-  return await axios.post(`${baseUrl}/signin`, credentials)
+const login = async (credentials, remember) => {
+  return await axios.post(`${baseUrl}/signin`, credentials, {params: {remember}})
 }
 
 const logout = () => {

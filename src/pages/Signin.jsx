@@ -1,4 +1,4 @@
-import { useState, useContext } from "react"
+import { useState, useContext, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { toast } from 'react-hot-toast'
 import usersService from '../services/users'
@@ -11,11 +11,16 @@ const Signin = () => {
     username: '',
     password: ''
   })
+  const [remember, setRemember] = useState(false)
 
   const handleChange = (event) => {
     const { name, value } = event.target
     setCredentials({...credentials, [name]: value})
   }
+
+  useEffect(() => {
+    console.log(remember)
+  }, [remember])
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -34,7 +39,6 @@ const Signin = () => {
   return (
     <div className="flex min-h-full flex-col bg-gray-100 dark:bg-neutral-800 justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img></img>
         <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Sign in to your account</h2>
       </div>
       
@@ -59,19 +63,24 @@ const Signin = () => {
               </div>
             </div>
 
-            {/* <!-- Checkbox --> */}
+            {/* <!-- Checkbox remember me --> */}
             <div className="flex items-center">
               <div className="flex">
-                <input id="remember-me" name="remember-me" type="checkbox" className="shrink-0 mt-0.5 border-gray-200 rounded-sm text-blue-600 focus:ring-blue-500 dark:bg-neutral-800 dark:border-neutral-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"/>
+                <input 
+                  id="remember-me"
+                  name="remember-me"
+                  type="checkbox"
+                  checked={remember}
+                  onChange={() => setRemember(!remember)}
+                  className="shrink-0 mt-0.5 border-gray-200 rounded-sm text-blue-600 focus:ring-blue-500 dark:bg-neutral-800 dark:border-neutral-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"/>
               </div>
               <div className="ms-3">
                 <label className="text-sm dark:text-white">Remember me</label>
               </div>
             </div>
-            {/* <!-- End Checkbox --> */}
 
             <div>
-              <button type="submit" className="flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+              <button type="submit" className="flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700">
                 Sign in
               </button>
             </div>
@@ -79,6 +88,7 @@ const Signin = () => {
         </div>
       </div>
 
+      {/* create new account */}
       <p className="mt-10 text-center text-sm/6 text-gray-500">
         Not a member?{' '}
         <a href="/signup" className="font-semibold text-blue-600 hover:text-blue-500">

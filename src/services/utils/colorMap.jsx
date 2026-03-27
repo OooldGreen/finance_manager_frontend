@@ -20,7 +20,7 @@ export const getCategoryById = (id) => {
   return Goal_category.find(cat => cat.id === id) || Goal_category[5]; // 默认返回 Others
 }
 
-export const Record_catogory = {
+const Record_catogory = {
   'Food_drink': '#A8E6CF', 
   'Shopping': '#FFD3B6',
   'Transport': '#B39DDB',
@@ -30,5 +30,10 @@ export const Record_catogory = {
   'Subscription': '#DCE775',
   'Salary': '#4DB6AC',
   'Investment': '#FFB74D',
-  'Sideline': '#F06292'
+  'Sideline': '#F06292',
+  'Others': '#CFD8DC'
 }
+
+export const getColor = (name) => {
+    return Record_catogory[name] || Record_catogory[10]
+  }

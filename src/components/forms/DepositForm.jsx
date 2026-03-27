@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { toast } from 'react-hot-toast'
 import confetti from 'canvas-confetti'
 import { CloseIcon } from "../ui/Icon"
@@ -6,10 +6,6 @@ import wishlistsService from "../../services/wishlists"
 
 const DepositForm = ({ setForm, data, onSuccess, setShowCelebration }) => {
   const [amount, setAmount] = useState(0)
-
-  useEffect(() => {
-    console.log(data)
-  })
 
   const handleDeposit = async () => {
     const saveAmount = parseFloat(amount)

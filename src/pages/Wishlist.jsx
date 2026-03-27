@@ -48,8 +48,8 @@ const Wishlist = () => {
         setWishes(wishListResponse.data.content)
         setPagination({
           ...pagination,
-          total: wishListResponse.data.totalPages,
-          current: wishListResponse.data.number
+          total: wishListResponse.data.page.totalPages,
+          current: wishListResponse.data.page.number
         })
       }
       setLoading(false)
