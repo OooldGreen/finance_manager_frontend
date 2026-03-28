@@ -56,15 +56,15 @@ const OverviewChart = () => {
         <div className='text-sm text-gray-600 bg-white/80 backdrop-blur-md p-4 border border-gray-50 shadow-sm rounded-xl '>
           <p className='font-bold'>{name}</p>
           <div className='flex items-center gap-2'>
-            <span className='w-2 h-2 rounded-full' style={{ backgroundColor: '#90daacff'}}></span>
+            <span className='w-2 h-2 rounded-full' style={{ backgroundColor: '#A8E6CF'}}></span>
             Income: € {income.toFixed(2)}
           </div>
           <div className='flex items-center gap-2'>
-            <span className='w-2 h-2 rounded-full' style={{ backgroundColor: '#b0bae5ff'}}></span>
+            <span className='w-2 h-2 rounded-full' style={{ backgroundColor: '#B39DDB'}}></span>
             Expense: -€ {expense.toFixed(2)}
           </div>
           <div className='flex items-center gap-2'>
-            <span className='w-2 h-2 rounded-full' style={{ backgroundColor: '#f6a665ff'}}></span>
+            <span className='w-2 h-2 rounded-full' style={{ backgroundColor: '#FFB74D'}}></span>
             Saving Rate: {parseFloat(savingRate).toFixed(2)} %
           </div>
         </div>
@@ -85,9 +85,9 @@ const OverviewChart = () => {
             <YAxis yAxisId="left" orientation='left' label={{ value: 'Amount (€)', angle: -90, position: 'insideLeft' }} axisLine={false} tick={{ fontSize: 12, fill: '#9CA3AF' }} />
             <YAxis yAxisId="right" orientation="right" unit="%" domain={[0, 100]} axisLine={false} tick={{ fontSize: 12, fill: '#9CA3AF' }} />
 
-            <Bar dataKey="income" fill="#90daacff" radius={[4, 4, 0, 0]} name="Income" maxBarSize={40} yAxisId="left"/>
-            <Bar dataKey="expense" fill="#b0bae5ff" radius={[4, 4, 0, 0]} name="Expenses" maxBarSize={40} yAxisId="left"/>
-            <Line type="monotone" dataKey="savingRate" yAxisId='right' stroke="#f6a665ff" name="Saving Rate" />
+            <Bar dataKey="income" fill="#A8E6CF" radius={[4, 4, 0, 0]} name="Income" maxBarSize={40} yAxisId="left"/>
+            <Bar dataKey="expense" fill="#B39DDB" radius={[4, 4, 0, 0]} name="Expenses" maxBarSize={40} yAxisId="left"/>
+            <Line type="monotone" dataKey="savingRate" yAxisId='right' stroke="#FFB74D" name="Saving Rate" />
 
             <Tooltip content={<CustomeTooltip />}/>
             <Legend verticalAlign="bottom" wrapperStyle={{ paddingTop: '20px'}}/>

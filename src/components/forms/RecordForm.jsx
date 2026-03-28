@@ -16,7 +16,7 @@ const RecordCreateForm = ({showRecordForm, setShowRecordForm, mode, recordId}) =
     date: new Date().toLocaleDateString('en-CA'),
     type: 'EXPENSE',
     status: 'PENDING',
-    category: '',
+    category: 'FOOD_DRINK',
     accountId: '',
     accountName: '',
     tags: []
@@ -39,6 +39,7 @@ const RecordCreateForm = ({showRecordForm, setShowRecordForm, mode, recordId}) =
         setFrequenTags(frequentTags.data)
       }
 
+      // get categories and accounts
       const [categoriesResponse, accounts] = await Promise.all([
         recordsService.getRecordCategories(),
         accountsService.getAllAccounts(),
@@ -116,11 +117,12 @@ const RecordCreateForm = ({showRecordForm, setShowRecordForm, mode, recordId}) =
     }
   }
 
+  // type: expense or income
   const handleTypeChange = (type) => {
     setFormData({
       ...formData, 
       type: type,
-      category: type === 'Expense' ? 'Food_drink' : 'Salary'
+      category: type === 'EXPENSE' ? 'Food_drink' : 'Salary'
     })
   }
 

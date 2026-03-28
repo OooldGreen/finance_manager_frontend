@@ -49,11 +49,11 @@ const MyBarChart = () => {
         <div className='bg-white/80 backdrop-blur-md p-4 border border-gray-50 shadow-sm rounded-xl text-sm'>
           <p className='pb-1 font-bold text-gray-600 flex items-center gap-2'>{name}</p>
           <div className='flex items-center gap-2 text-gray-500'>
-            <span className='w-2 h-2 rounded-full' style={{ backgroundColor: '#90daacff'}}></span>
+            <span className='w-2 h-2 rounded-full' style={{ backgroundColor: '#A8E6CF'}}></span>
             budget: € {limit.toFixed(2)}
           </div>
           <div className='flex items-center gap-2 text-gray-500'>
-            <span className='w-2 h-2 rounded-full' style={{ backgroundColor: '#9caae8ff'}}></span>
+            <span className='w-2 h-2 rounded-full' style={{ backgroundColor: '#B39DDB'}}></span>
             spent: € {spent.toFixed(2)}
           </div>
         </div>
@@ -73,8 +73,8 @@ const MyBarChart = () => {
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis dataKey="name" label={{ value: 'Categories', position: 'insideBottom' }} axisLine={{ stroke: '#E5E7EB' }} height={85} interval={0} tick={{ fontSize: 12, fill: '#9CA3AF', angle: -45, textAnchor: 'end' }}/>
               <YAxis label={{ value: 'Amount (€)', angle: -90, position: 'insideLeft' }} axisLine={false} tick={{ fontSize: 12, fill: '#9CA3AF' }} />
-              <Bar dataKey="limit" fill="#82ca9d" radius={[4, 4, 0, 0]} name='Budgets'/>
-              <Bar dataKey="spent" fill="#9caae8ff" radius={[4, 4, 0, 0]} name="Expenses" />
+              <Bar dataKey="limit" fill="#A8E6CF" radius={[4, 4, 0, 0]} name='Budgets'/>
+              <Bar dataKey="spent" fill="#B39DDB" radius={[4, 4, 0, 0]} name="Expenses" />
               <Tooltip content={<CustomeTooltip />} cursor={{ fill: '#f3f4f6', opacity: 0.5 }}/>
               <Legend verticalAlign="bottom" wrapperStyle={{ paddingTop: '20px'}} />
             </BarChart>

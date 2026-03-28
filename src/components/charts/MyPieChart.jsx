@@ -9,26 +9,11 @@ import dashboardService from '../../services/dashboard'
 const MyPieChart = () => {
   const [dateType, setDateType] = useState('month')
   const [type, setType] = useState('EXPENSE')
-  const [date, setDate] = useState({
-    startDate: dayjs().startOf('month').format('YYYY-MM-DD'),
-    endDate: dayjs().endOf('month').format('YYYY-MM-DD')
-  })
+  const [baseDate, setBaseDate] = useState(dayjs())
   const [data, setData] = useState([])
 
   const onDatePickerChange = (date) => {
-    let startDate, endDate
-    
-    if (dateType === 'year') {
-      startDate = dayjs(date).startOf('year').format('YYYY-MM-DD')
-      endDate = dayjs(date).endOf('year').format('YYYY-MM-DD')
-    } else if (dateType === 'month') {
-      startDate = dayjs(date).startOf('month').format('YYYY-MM-DD') 
-      endDate = dayjs(date).endOf('month').format('YYYY-MM-DD')
-    } else {
-      startDate = null
-      endDate = null
-    }
-    setDate({ startDate, endDate }) 
+    setBaseDate(date)
   }
 
   const handleTypeChange = (type) => {
@@ -37,13 +22,16 @@ const MyPieChart = () => {
   }
 
   useEffect(() => {
-    getData()
-  }, [date.startDate, date.endDate, type, dateType])
+    const date = baseDate ? dayjs(baseDate) : dayjs()
+    const startDate = dateType === 'total' ? null : date.startOf(dateType).format('YYYY-MM-DD')
+    const endDate = dateType === 'total' ? null : date.endOf(dateType).format('YYYY-MM-DD')
+    getData(startDate, endDate)
+  }, [baseDate, type, dateType])
 
-  const getData = async () => {
+  const getData = async (startDate, endDate) => {
     setData([])
     try {
-      const response = await dashboardService.getDataByCatAndType(type, date.startDate, date.endDate)
+      const response = await dashboardService.getDataByCatAndType(type, startDate, endDate)
       if (response.status === 200) {
         if (response.data.length > 0) {
           const data = response.data.map(i => ({
@@ -165,7 +153,7 @@ const MyPieChart = () => {
           )}
       </div>
 
-      {/* exp / inc */}
+      {/* buttons: exp / inc */}
       <div className='text-center justify-center m-4'>
         <Segmented 
           size='small'
