@@ -1,5 +1,4 @@
 import axios from "axios"
-import { getConfig } from './users'
 const baseUrl = 'http://localhost:8081/api/dashboard'
 
 //  get both expense and income data
@@ -9,8 +8,7 @@ const getData = async (startDate, endDate) => {
     params: {
       startDate,
       endDate
-    },
-    ...getConfig()
+    }
   })
   return response
 }
@@ -28,14 +26,13 @@ const getDataByCatAndType = async (type, startDate, endDate) => {
       type,
       startDate,
       endDate
-    },
-    ...getConfig()
+    }
   })
   return response
 }
 
 const getKpiData = async () => {
-  const response  = await axios.get(`${baseUrl}/kpi`, getConfig())
+  const response  = await axios.get(`${baseUrl}/kpi`)
   return response
 }
 
@@ -43,8 +40,7 @@ const getHeatmapData = async (year) => {
   const response = await axios.get(`${baseUrl}/heatmap`, {
     params: {
       year: year
-    },
-    ...getConfig()
+    }
   })
   return response
 }

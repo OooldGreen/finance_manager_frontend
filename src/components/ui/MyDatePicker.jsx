@@ -46,6 +46,12 @@ const MyDatePicker = ({ mode, onChange }) => {
           style={{width: '200px'}}
           onChange={handleChange}
         />}
+
+        {/* range picker */}
+        {mode === 'range' && <RangePicker
+          style={{width: '280px'}}
+          onChange={handleChange}
+        />}
       </div>
     </ConfigProvider>
   )

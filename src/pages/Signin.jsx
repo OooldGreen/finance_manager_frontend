@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react"
+import { useState, useContext } from "react"
 import { useNavigate } from "react-router-dom"
 import { toast } from 'react-hot-toast'
 import usersService from '../services/users'
@@ -18,21 +18,19 @@ const Signin = () => {
     setCredentials({...credentials, [name]: value})
   }
 
-  useEffect(() => {
-    console.log(remember)
-  }, [remember])
-
   const handleSubmit = async (event) => {
     event.preventDefault()
 
     try {
-      const response = await usersService.login(credentials)
+      const response = await usersService.login(credentials, remember)
+      console.log(response)
       window.localStorage.setItem('loggedFinanceUser', JSON.stringify(response.data))
-      usersService.setToken(response.data.token)
+      
       setUser(response.data)
       navigate('/dashboard')
-    } catch {
+    } catch(error) {
       toast.error('Invalid username or password.')
+      console.log(error)
     }
   }
 

@@ -9,16 +9,13 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const initAuth = async () => {
-      const savedUser = window.localStorage.getItem('loggedFinanceUser')
-      if (savedUser) {
-        try {
-          const response = await usersService.getUser()
-          setUser(response.data)
-        } catch (err) {
-          console.error('fail to get user information', err)
-          window.localStorage.removeItem('loggedFinanceUser')
-          setUser(null)
-        }
+      try {
+        const response = await usersService.getUser()
+        setUser(response.data)
+        window.localStorage.setItem('loggedFinanceUser', JSON.stringify(response.data))
+      } catch (err) {
+        window.localStorage.removeItem('loggedFinanceUser')
+        setUser(null)
       }
       setLoading(false)
     }

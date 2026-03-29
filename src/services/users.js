@@ -1,23 +1,36 @@
 import axios from "axios"
 const baseUrl = 'http://localhost:8081/api/users'
 
-let token = null
+axios.defaults.withCredentials = true
 
-const setToken = newToken => {
-  token =  `Bearer ${newToken}`
-}
+axios.interceptors.response.use(response => {
+  const newToken = response.headers['authorization']
+  if (newToken && newToken.startsWith('Bearer')) {
+    const token = newToken.substring(7)
 
-// get authorization
-export const getConfig = () => {
+    const loggedUserJSON = window.localStorage.getItem('loggedFinanceUser') 
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      user.token = token
+      window.localStorage.setItem('loggedFinanceUser', JSON.stringify(user))
+    }
+  }
+  return response
+}, error => {
+  if (error.response && error.response.status == 401) {
+    console.log('Please log in')
+  }
+  return Promise.reject(error)
+})
+
+axios.interceptors.request.use(config => { 
   const loggedUserJSON = window.localStorage.getItem('loggedFinanceUser')
   if (loggedUserJSON) {
     const user = JSON.parse(loggedUserJSON)
-    return ({
-      headers: {
-        Authorization: token ||  `Bearer ${user.token}`
-    }})
+    config.headers.Authorization = `Bearer ${user.token}`
   }
-}
+  return config
+}, error => Promise.reject(error))
 
 const createUser = async (newUser) => {
   const response = await axios.post(baseUrl, newUser)
@@ -25,26 +38,27 @@ const createUser = async (newUser) => {
 }
 
 const getUser = async () => {
-  const response = await axios.get(`${baseUrl}/me`, getConfig())
+  const response = await axios.get(`${baseUrl}/me`)
   return response
 }
 
 const deleteUser = () => {
-  return axios.delete(`${baseUrl}/me`, getConfig())
+  return axios.delete(`${baseUrl}/me`)
 }
 
 const updateUser = async (user) => {
-  const response = await axios.patch(`${baseUrl}/me`, user, getConfig())
+  const response = await axios.patch(`${baseUrl}/me`, user)
   return response
 }
 
 const updatePassword = async (passwords) => {
-  const response = await axios.patch(`${baseUrl}/me/password`, passwords, getConfig())
+  const response = await axios.patch(`${baseUrl}/me/password`, passwords)
   return response
 }
 
 const login = async (credentials, remember) => {
-  return await axios.post(`${baseUrl}/signin`, credentials, {params: {remember}})
+  const response = await axios.post(`${baseUrl}/signin`, credentials, {params: {remember}})
+  return response
 }
 
 const logout = () => {
@@ -52,4 +66,4 @@ const logout = () => {
   delete axios.defaults.headers.common['Authorization']
 }
 
-export default { setToken, getUser, createUser, deleteUser, updateUser, updatePassword, login, logout }
+export default { getUser, createUser, deleteUser, updateUser, updatePassword, login, logout }

@@ -18,6 +18,7 @@ import AccountDetail from './pages/AccountDetail'
 
 import { AuthProvider } from './components/context/AuthContext'
 import { RecordProvider } from './components/context/RecordContext';
+import Search from './pages/Search';
 
 function App() {
 
@@ -46,6 +47,7 @@ function App() {
                 <Route path='/records' element={<Records/>}></Route>
               </Route>
               <Route path='/wishlist' element={<Wishlist/>}></Route>
+              <Route path='/search' element={<Search/>}></Route>
             </Route>
 
             <Route path="*" element={<NotFound/>}></Route>
