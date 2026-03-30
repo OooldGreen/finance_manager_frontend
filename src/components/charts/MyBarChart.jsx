@@ -3,6 +3,7 @@ import { BarChart, Legend, XAxis, YAxis, CartesianGrid, Tooltip, Bar, Responsive
 import dayjs from 'dayjs'
 import MyDatePicker from '../ui/MyDatePicker'
 import budgetsService from '../../services/budgets'
+import dashboardService from '../../services/dashboard'
 
 const MyBarChart = () => {
   const [date, setDate] = useState({
@@ -25,21 +26,45 @@ const MyBarChart = () => {
   const getData = async () => {
     setData([])
     try {
-      const budgetRes = await budgetsService.getBudgetByMonth(date.startDate.split('-')[0], date.startDate.split('-')[1])
-      if (budgetRes.status === 200) {
-        if (budgetRes.data != null) {
-          setData(budgetRes.data.categories.map(budget => (
-            {
-              name: budget.categoryName.charAt(0) + budget.categoryName.slice(1).toLowerCase(),
-              spent: budget.spentAmount || 0,
-              limit: budget.limitAmount || 0
-            }
-          )))
+      // Continue event there is no budgetRes
+      const [spentRes, budgetRes] = await Promise.allSettled([
+        dashboardService.getDataByCatAndType('EXPENSE', date.startDate, date.endDate),
+        budgetsService.getBudgetByMonth(date.startDate.split('-')[0], date.startDate.split('-')[1])
+      ])
+
+      // find real datas
+      const spentData = spentRes.status === 'fulfilled' ? spentRes.value.data : []
+      const budgetData = budgetRes.status === 'fulfilled' ? budgetRes.value.data.categories : []
+
+      let spentMap = {}
+      spentData.forEach(i => {
+        const name = formatAdapteur(i.name)
+        spentMap[name] = Math.abs(i.value)
+      })
+
+      // find all categories in spent and budget
+      const allCats = new Set([
+        ...Object.keys(spentMap),
+        ...budgetData?.map(b => formatAdapteur(b.categoryName))
+      ])
+      
+      const data = Array.from(allCats).map(cat => {
+        const budgetObj = budgetData ? budgetData.find(b => formatAdapteur(b.categoryName) === cat) : null
+        return {
+          name: cat,
+          spent: spentMap[cat] || 0,
+          limit: budgetObj?.limitAmount || 0
         }
-      }
+      })
+      
+      setData(data)
     } catch (err) {
-      console.log('fail to get data by categories', err)
+      console.log('Fail to get data by categories', err)
     }
+  }
+
+  const formatAdapteur = (string) => {
+    return string.charAt(0) + string.slice(1).toLowerCase()
   }
 
   const CustomeTooltip = ({active, payload}) => {

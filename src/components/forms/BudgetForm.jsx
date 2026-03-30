@@ -13,7 +13,7 @@ import ConfirmDeleteModal from "../ui/ConfirmDeleteModal"
 const BudgetForm = ({ setShowBudgetForm, showBudgetForm }) => {
   const [loading, setLoading] = useState(true)
   const [isEditing, setIsEditing] = useState(false)
-  const [noBudget, setNoBudget] = useState(false)
+  const [noBudget, setNoBudget] = useState(true)
   const [categories, setCategories] = useState([])
   const [showBudgetDetail, setShowBudgetDetail] = useState(false)
   const [showDeleteBudget, setShowDeleteBudget] = useState(false)
