@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
       try {
         const response = await usersService.getUser()
         setUser(response.data)
-        window.localStorage.setItem('loggedFinanceUser', JSON.stringify(response.data))
+        // window.localStorage.setItem('loggedFinanceUser', JSON.stringify(response.data))
       } catch (err) {
         window.localStorage.removeItem('loggedFinanceUser')
         setUser(null)

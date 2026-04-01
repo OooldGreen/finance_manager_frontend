@@ -171,13 +171,6 @@ const Search = () => {
           <input onChange={e => setFilters({...filters, keyword: e.target.value})} className="bg-gray-100 border-gray-300 py-2.5 py-3 ps-10 pe-4 block w-full rounded-lg sm:text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:opacity-50 disabled:pointer-events-none" type="text" placeholder="Enter keywords" />
         </div>
 
-        {/* search history */}
-        <div className="flex gap-4">
-          <div className="text-gray-600 dark:text-neutral-400 bg-white px-2 py-1 rounded-md">
-            income
-          </div>
-        </div>
-
         {/* search result list */}
         {records.length === 0 ? '' : 
           <div>

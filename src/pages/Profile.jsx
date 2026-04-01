@@ -27,11 +27,12 @@ const Profile = () => {
             dateOfBirth: userData?.dateOfBirth || '' 
           })
         } catch (err) {
+          console.log(err)
           toast.error("fail to get user's information")
         }
       }
     }
-    getUserData();
+    getUserData()
   }, [user])
 
   if (!userFormData) {

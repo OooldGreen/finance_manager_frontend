@@ -11,8 +11,11 @@ axios.interceptors.response.use(response => {
     const loggedUserJSON = window.localStorage.getItem('loggedFinanceUser') 
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      user.token = token
-      window.localStorage.setItem('loggedFinanceUser', JSON.stringify(user))
+      const updatedUser = {
+        ...user,
+        token: token
+      }
+      window.localStorage.setItem('loggedFinanceUser', JSON.stringify(updatedUser))
     }
   }
   return response

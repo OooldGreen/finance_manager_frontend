@@ -34,12 +34,12 @@ const Dashboard = () => {
   const getData = async () => {
     try {
       getHeatmapData()
-      const [kpiResponse, budgetResponse] = await Promise.all([
+      const [kpiResponse, budgetResponse] = await Promise.allSettled([
         dashboardService.getKpiData(),
         budgetsService.getBudgetByMonth(dayjs().year(), dayjs().month() + 1)
       ])
-      if (kpiResponse.status === 200) {
-        const data = kpiResponse.data
+      if (kpiResponse.status === 'fulfilled') {
+        const data = kpiResponse.value.data
         setKpiDate({
           balance: data.monthlyBalance,
           remaining: data.monthlyRemaining,
@@ -47,8 +47,8 @@ const Dashboard = () => {
           topExpense: data.topExpense
         })
       }
-      if (budgetResponse.status === 200) {
-        const data = budgetResponse.data
+      if (budgetResponse.status === 'fulfilled') {
+        const data = budgetResponse.value.data
         setBudget({ total: data.totalBudget, expense: data.totalExpense, pending: data.totalPending })
       }
     } catch (err) {
